@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,13 +8,119 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Print test"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <!-- Banner -->
+    <ImageView
+        android:id="@+id/bannerImageView"
+        android:layout_width="392dp"
+        android:layout_height="292dp"
+        android:contentDescription="Pizza Banner"
+        android:scaleType="fitCenter"
+        android:src="@drawable/banner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <!-- Chicago Pizza Button -->
+    <ImageButton
+        android:id="@+id/chicagoButton"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:background="@null"
+        android:contentDescription="Chicago Pizza"
+        android:scaleType="centerCrop"
+        android:src="@drawable/chicago_pizza"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bannerImageView" />
+
+    <TextView
+        android:id="@+id/chicagoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chicago Pizza"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/chicagoButton"
+        app:layout_constraintStart_toStartOf="@id/chicagoButton"
+        app:layout_constraintEnd_toEndOf="@id/chicagoButton"
+        android:layout_marginTop="4dp" />
+
+    <!-- NY Pizza Button -->
+    <ImageButton
+        android:id="@+id/nyButton"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="20dp"
+        android:background="@null"
+        android:contentDescription="NY Pizza"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ny_pizza"
+        app:layout_constraintStart_toEndOf="@id/chicagoButton"
+        app:layout_constraintTop_toBottomOf="@id/bannerImageView" />
+
+    <TextView
+        android:id="@+id/nyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NY Pizza"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/nyButton"
+        app:layout_constraintStart_toStartOf="@id/nyButton"
+        app:layout_constraintEnd_toEndOf="@id/nyButton"
+        android:layout_marginTop="4dp" />
+
+    <!-- Current Order Button -->
+
+    <ImageButton
+        android:id="@+id/currentOrderButton"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:background="@null"
+        android:contentDescription="Current Order"
+        android:scaleType="centerCrop"
+        android:src="@drawable/current_order"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chicagoButton" />
+
+    <TextView
+        android:id="@+id/currentOrderText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current Order"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/currentOrderButton"
+        app:layout_constraintStart_toStartOf="@id/currentOrderButton"
+        app:layout_constraintEnd_toEndOf="@id/currentOrderButton"
+        android:layout_marginTop="4dp" />
+
+    <!-- Orders Placed Button -->
+
+    <ImageButton
+        android:id="@+id/ordersPlacedButton"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="32dp"
+        android:background="@null"
+        android:contentDescription="Orders Placed"
+        android:scaleType="centerCrop"
+        android:src="@drawable/orders_placed"
+        app:layout_constraintStart_toEndOf="@id/currentOrderButton"
+        app:layout_constraintTop_toBottomOf="@id/nyButton" />
+
+    <TextView
+        android:id="@+id/ordersPlacedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Orders Placed"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/ordersPlacedButton"
+        app:layout_constraintStart_toStartOf="@id/ordersPlacedButton"
+        app:layout_constraintEnd_toEndOf="@id/ordersPlacedButton"
+        android:layout_marginTop="4dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
