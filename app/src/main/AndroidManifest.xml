@@ -12,15 +12,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidApp"
         tools:targetApi="31">
+
+        <!-- Main activity (already the launcher) -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Declare the new activities -->
+        <activity android:name=".ChicagoPizzaActivity" android:exported="true" />
+        <activity android:name=".NYPizzaActivity" android:exported="true" />
+        <activity android:name=".CurrentOrderActivity" android:exported="true" />
+        <activity android:name=".OrdersPlacedActivity" android:exported="true" />
+
     </application>
 
 </manifest>
