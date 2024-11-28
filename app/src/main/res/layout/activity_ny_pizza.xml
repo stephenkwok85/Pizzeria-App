@@ -1,6 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- NY Style -->
+        <TextView
+            android:id="@+id/chicagoStyleLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NY Style"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Pic of Pizza -->
+        <ImageView
+            android:id="@+id/pizzaImage"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="Pizza Image"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ny_pizza_image_placeholder"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Choose Type -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/chooseTypeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose Type"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/chooseTypeSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp" />
+        </LinearLayout>
+
+        <!-- Size -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/sizeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Size"
+                android:textSize="16sp" />
+
+            <RadioGroup
+                android:id="@+id/sizeRadioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="16dp">
+
+                <RadioButton
+                    android:id="@+id/sizeSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="S" />
+
+                <RadioButton
+                    android:id="@+id/sizeMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="M" />
+
+                <RadioButton
+                    android:id="@+id/sizeLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="L" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <!-- Select Toppings -->
+        <TextView
+            android:id="@+id/selectToppingsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Toppings"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <GridLayout
+            android:id="@+id/toppingsGrid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:layout_marginBottom="16dp">
+
+            <!-- Topping List -->
+            <CheckBox
+                android:id="@+id/toppingSausage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SAUSAGE" />
+            <CheckBox
+                android:id="@+id/toppingPepperoni"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PEPPERONI" />
+            <CheckBox
+                android:id="@+id/toppingGreenPepper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GREEN_PEPPER" />
+            <CheckBox
+                android:id="@+id/toppingOnion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ONION" />
+            <CheckBox
+                android:id="@+id/toppingMushroom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MUSHROOM" />
+            <CheckBox
+                android:id="@+id/toppingBBQChicken"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BBQ_CHICKEN" />
+            <CheckBox
+                android:id="@+id/toppingBeef"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BEEF" />
+            <CheckBox
+                android:id="@+id/toppingHam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HAM" />
+            <CheckBox
+                android:id="@+id/toppingProvolone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PROVOLONE" />
+            <CheckBox
+                android:id="@+id/toppingCheddar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CHEDDAR" />
+            <CheckBox
+                android:id="@+id/toppingOlives"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OLIVES" />
+            <CheckBox
+                android:id="@+id/toppingSpinach"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SPINACH" />
+            <CheckBox
+                android:id="@+id/toppingPineapple"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PINEAPPLE" />
+            <CheckBox
+                android:id="@+id/toppingBacon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BACON" />
+        </GridLayout>
+
+        <!-- Pizza Price and Add to Order -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/pizzaPriceLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pizza Price: $"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/pizzaPriceField"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:focusable="false"
+                android:layout_marginStart="8dp" />
+
+            <Button
+                android:id="@+id/addToOrderButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add to Order"
+                android:layout_marginStart="16dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
