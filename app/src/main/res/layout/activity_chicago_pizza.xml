@@ -42,14 +42,30 @@
                 android:id="@+id/chooseTypeLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Choose Type"
+                android:text="Type"
                 android:textSize="16sp" />
 
             <Spinner
                 android:id="@+id/chooseTypeSpinner"
-                android:layout_width="wrap_content"
+                android:layout_width="141dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp" />
+
+            <TextView
+                android:id="@+id/crustLabel2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Crust" />
+
+            <EditText
+                android:id="@+id/crustField2"
+                android:layout_width="100dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:editable="false"
+                android:focusable="false" />
         </LinearLayout>
 
         <!-- Size -->
