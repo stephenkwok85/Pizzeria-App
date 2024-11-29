@@ -1,8 +1,10 @@
 package com.example.androidapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -55,6 +57,7 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chicago_pizza);
 
+        // Initialize views
         chooseType = findViewById(R.id.chooseTypeSpinner);
         crustField = findViewById(R.id.crustField2);
         sSize = findViewById(R.id.sizeSmall);
@@ -76,8 +79,56 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         pineapple = findViewById(R.id.toppingPineapple);
         bacon = findViewById(R.id.toppingBacon);
         pizzaPrice = findViewById(R.id.pizzaPriceField);
+        pizzaImage = findViewById(R.id.pizzaImage); // Ensure this ID is correct and matches the layout
 
-        setupInitialValues();
+        // Set initial pizza type spinner options
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
+                new String[]{"Deluxe", "BBQ Chicken", "Meatzza", "Build Your Own"});
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        chooseType.setAdapter(adapter);
+
+        // Set default pizza type (e.g., Deluxe)
+        chooseType.setSelection(0);
+        setPizzaOptions("Deluxe");
+
+        // Listener for when the user changes pizza type from spinner
+        chooseType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String selectedType = parentView.getItemAtPosition(position).toString();
+                setPizzaOptions(selectedType);
+                updatePizzaPrice();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Do nothing if no selection
+            }
+        });
+
+        // Listener for pizza size changes
+        sizeGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            updatePizzaPrice(); // Update price when size changes
+        });
+
+        // Listener for topping changes (each checkbox)
+        sausage.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
+        pepperoni.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
+        greenPepper.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
+        onion.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
+        mushroom.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
+        bbqChicken.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
+        beef.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
+        ham.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
+        provolone.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
+        cheddar.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
+        olives.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
+        spinach.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
+        pineapple.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
+        bacon.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
+
+        // Initialize the pizza price display
+        updatePizzaPrice();
     }
 
     private void setupInitialValues() {
@@ -93,12 +144,11 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
                 isCustomizable = selectedType.equals("Build Your Own");
                 lockToppings(!isCustomizable);
                 updatePizzaPrice();
-                updatePizzaImage(selectedType);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // Handle the case when no item is selected (optional)
+                // Optionally handle the case when no item is selected
             }
         });
 
@@ -207,8 +257,12 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
     }
 
     private void updatePizzaPrice() {
-        String selectedType = chooseType.getSelectedItem().toString();
-        String selectedSize = ((RadioButton) findViewById(sizeGroup.getCheckedRadioButtonId())).getText().toString();
+        // Safely get the selected type, checking for null
+        String selectedType = chooseType.getSelectedItem() != null ? chooseType.getSelectedItem().toString() : "";
+
+        // Safely get the selected size, checking if the size group has a checked radio button
+        RadioButton selectedRadioButton = findViewById(sizeGroup.getCheckedRadioButtonId());
+        String selectedSize = selectedRadioButton != null ? selectedRadioButton.getText().toString() : "";
 
         // Calculate the base price based on the pizza type and size
         double basePrice = calculateBasePrice(selectedType, selectedSize);
@@ -217,8 +271,12 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         int toppingCount = isCustomizable ? selectedToppingsCount : 0;
         double totalPrice = basePrice + (TOPPING_PRICE * toppingCount);
 
-        // Update the price display
-        pizzaPrice.setText(String.format("$%.2f", totalPrice));
+        // Update the price display (ensure pizzaPrice is not null before calling setText)
+        if (pizzaPrice != null) {
+            pizzaPrice.setText(String.format("$%.2f", totalPrice));
+        } else {
+            Log.e("ChicagoPizzaActivity", "pizzaPrice TextView is null.");
+        }
     }
 
     private double calculateBasePrice(String type, String size) {
@@ -371,35 +429,6 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         // Ensure that the maximum number of toppings is not exceeded
         if (pizza.getToppings().size() > MAX_TOPPINGS) {
             pizza.removeTopping(pizza.getToppings().get(MAX_TOPPINGS));
-        }
-    }
-
-    /**
-     * Updates the pizza image based on the selected pizza type.
-     *
-     * @param pizzaType The selected pizza type.
-     */
-    private void updatePizzaImage(String pizzaType) {
-        ImageView pizzaImage = findViewById(R.id.pizzaImage);
-        int imageResource = 0;
-
-        switch (pizzaType) {
-            case "Deluxe":
-                imageResource = R.drawable.ch_deluxe;
-                break;
-            case "BBQ Chicken":
-                imageResource = R.drawable.ch_bbq;
-                break;
-            case "Meatzza":
-                imageResource = R.drawable.ch_meat;
-                break;
-            case "Build Your Own":
-                imageResource = R.drawable.ch_build;
-                break;
-        }
-
-        if (imageResource != 0) {
-            pizzaImage.setImageResource(imageResource);
         }
     }
 }
