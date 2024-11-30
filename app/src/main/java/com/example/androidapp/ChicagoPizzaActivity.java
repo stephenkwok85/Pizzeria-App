@@ -42,7 +42,7 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
     private static final double BYO_L_PRICE = 12.99;
 
     private Spinner chooseType;
-    private EditText crustField;
+    private TextView crustField;
     private RadioButton sSize, mSize, lSize;
     private RadioGroup sizeGroup;
     private CheckBox sausage, pepperoni, greenPepper, onion, mushroom, bbqChicken, beef, ham, provolone, cheddar, olives, spinach, pineapple, bacon;
@@ -59,7 +59,7 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
 
         // Initialize views
         chooseType = findViewById(R.id.chooseTypeSpinner);
-        crustField = findViewById(R.id.crustField2);
+        crustField = findViewById(R.id.crustTypeView);
         sSize = findViewById(R.id.sizeSmall);
         mSize = findViewById(R.id.sizeMedium);
         lSize = findViewById(R.id.sizeLarge);
@@ -79,19 +79,22 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         pineapple = findViewById(R.id.toppingPineapple);
         bacon = findViewById(R.id.toppingBacon);
         pizzaPrice = findViewById(R.id.pizzaPriceField);
-        pizzaImage = findViewById(R.id.pizzaImage); // Ensure this ID is correct and matches the layout
+        pizzaImage = findViewById(R.id.pizzaImage);
 
-        // Set initial pizza type spinner options
+        // Set up spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
                 new String[]{"Deluxe", "BBQ Chicken", "Meatzza", "Build Your Own"});
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         chooseType.setAdapter(adapter);
 
-        // Set default pizza type (e.g., Deluxe)
-        chooseType.setSelection(0);
-        setPizzaOptions("Deluxe");
+        // Set default selection for pizza type to Build Your Own
+        chooseType.setSelection(3);  // "Build Your Own" is at index 3
+        setPizzaOptions("Build Your Own");  // Set the pizza options to Build Your Own
 
-        // Listener for when the user changes pizza type from spinner
+        // Set default size to Small
+        sSize.setChecked(true);  // Select the small size radio button
+
+        // Set listener for the pizza type spinner
         chooseType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -106,77 +109,49 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
             }
         });
 
-        // Listener for pizza size changes
+        // Set listener for size radio group
         sizeGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            updatePizzaPrice(); // Update price when size changes
+            updatePizzaPrice();
         });
 
-        // Listener for topping changes (each checkbox)
-        sausage.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
-        pepperoni.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
-        greenPepper.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
-        onion.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
-        mushroom.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
-        bbqChicken.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
-        beef.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
-        ham.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
-        provolone.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
-        cheddar.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
-        olives.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
-        spinach.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
-        pineapple.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
-        bacon.setOnCheckedChangeListener((buttonView, isChecked) -> updatePizzaPrice());
-
-        // Initialize the pizza price display
-        updatePizzaPrice();
-    }
-
-    private void setupInitialValues() {
-        crustField.setText("Pan");
-        crustField.setEnabled(false);
-        sSize.setChecked(true);
-
-        chooseType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String selectedType = parentView.getSelectedItem().toString();
-                setPizzaOptions(selectedType);
-                isCustomizable = selectedType.equals("Build Your Own");
-                lockToppings(!isCustomizable);
-                updatePizzaPrice();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Optionally handle the case when no item is selected
-            }
-        });
-
-        sizeGroup.setOnCheckedChangeListener((group, checkedId) -> updatePizzaPrice());
+        // Set up topping listeners
         setupToppingListeners();
+
+        // Update pizza price
         updatePizzaPrice();
     }
 
     private void setPizzaOptions(String pizzaType) {
-        crustField.setText("");  // Clear crust text field
         resetToppingSelections();
+        selectedToppingsCount = 0;
+
+        String crustType = "";
 
         switch (pizzaType) {
             case "Deluxe":
-                crustField.setText("Deep Dish");
+                crustType = "Deep Dish";
                 selectToppings(sausage, pepperoni, greenPepper, onion, mushroom);
+                crustField.setText(crustType);
+                lockToppings(true);
                 break;
             case "BBQ Chicken":
-                crustField.setText("Pan");
+                crustType = "Pan";
                 selectToppings(bbqChicken, greenPepper, provolone, cheddar);
+                crustField.setText(crustType);
+                lockToppings(true);
                 break;
             case "Meatzza":
-                crustField.setText("Stuffed");
+                crustType = "Stuffed";
                 selectToppings(sausage, pepperoni, beef, ham);
+                crustField.setText(crustType);
+                lockToppings(true);
                 break;
             case "Build Your Own":
-                crustField.setText("Pan");
+                crustType = "Pan";
                 selectedToppingsCount = 0;
+                isCustomizable = true;
+                crustField.setText(crustType);
+                lockToppings(false);
                 break;
         }
     }
@@ -242,13 +217,86 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         if (isChecked) {
             if (selectedToppingsCount < MAX_TOPPINGS) {
                 selectedToppingsCount++;
-                updatePizzaPrice();
+                disableExtraToppings();
             } else {
                 showToastMessage("Max " + MAX_TOPPINGS + " toppings are allowed.");
+                uncheckTopping();
             }
         } else {
             selectedToppingsCount--;
-            updatePizzaPrice();
+            enableAllToppings();
+        }
+
+        updatePizzaPrice();
+    }
+
+    private void disableExtraToppings() {
+        if (selectedToppingsCount >= MAX_TOPPINGS) {
+            sausage.setEnabled(sausage.isChecked());
+            pepperoni.setEnabled(pepperoni.isChecked());
+            greenPepper.setEnabled(greenPepper.isChecked());
+            onion.setEnabled(onion.isChecked());
+            mushroom.setEnabled(mushroom.isChecked());
+            bbqChicken.setEnabled(bbqChicken.isChecked());
+            beef.setEnabled(beef.isChecked());
+            ham.setEnabled(ham.isChecked());
+            provolone.setEnabled(provolone.isChecked());
+            cheddar.setEnabled(cheddar.isChecked());
+            olives.setEnabled(olives.isChecked());
+            spinach.setEnabled(spinach.isChecked());
+            pineapple.setEnabled(pineapple.isChecked());
+            bacon.setEnabled(bacon.isChecked());
+        }
+    }
+
+    private void uncheckTopping() {
+        if (sausage.isChecked()) {
+            sausage.setChecked(false);
+        } else if (pepperoni.isChecked()) {
+            pepperoni.setChecked(false);
+        } else if (greenPepper.isChecked()) {
+            greenPepper.setChecked(false);
+        } else if (onion.isChecked()) {
+            onion.setChecked(false);
+        } else if (mushroom.isChecked()) {
+            mushroom.setChecked(false);
+        } else if (bbqChicken.isChecked()) {
+            bbqChicken.setChecked(false);
+        } else if (beef.isChecked()) {
+            beef.setChecked(false);
+        } else if (ham.isChecked()) {
+            ham.setChecked(false);
+        } else if (provolone.isChecked()) {
+            provolone.setChecked(false);
+        } else if (cheddar.isChecked()) {
+            cheddar.setChecked(false);
+        } else if (olives.isChecked()) {
+            olives.setChecked(false);
+        } else if (spinach.isChecked()) {
+            spinach.setChecked(false);
+        } else if (pineapple.isChecked()) {
+            pineapple.setChecked(false);
+        } else if (bacon.isChecked()) {
+            bacon.setChecked(false);
+        }
+    }
+
+    private void enableAllToppings() {
+        if (selectedToppingsCount < MAX_TOPPINGS) {
+            sausage.setEnabled(true);
+            pepperoni.setEnabled(true);
+            greenPepper.setEnabled(true);
+            onion.setEnabled(true);
+            mushroom.setEnabled(true);
+            bbqChicken.setEnabled(true);
+            beef.setEnabled(true);
+            ham.setEnabled(true);
+            provolone.setEnabled(true);
+            cheddar.setEnabled(true);
+            olives.setEnabled(true);
+            spinach.setEnabled(true);
+            pineapple.setEnabled(true);
+            bacon.setEnabled(true);
         }
     }
 
@@ -257,21 +305,22 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
     }
 
     private void updatePizzaPrice() {
-        // Safely get the selected type, checking for null
+        // Safely get the selected pizza type
         String selectedType = chooseType.getSelectedItem() != null ? chooseType.getSelectedItem().toString() : "";
 
-        // Safely get the selected size, checking if the size group has a checked radio button
+        // Safely get the selected size
         RadioButton selectedRadioButton = findViewById(sizeGroup.getCheckedRadioButtonId());
         String selectedSize = selectedRadioButton != null ? selectedRadioButton.getText().toString() : "";
 
         // Calculate the base price based on the pizza type and size
         double basePrice = calculateBasePrice(selectedType, selectedSize);
 
-        // Calculate the total price based on selected toppings
-        int toppingCount = isCustomizable ? selectedToppingsCount : 0;
+        // Calculate the total price based on selected toppings (only for Build Your Own)
+        int toppingCount = isCustomizable ? selectedToppingsCount : 0; // Only count toppings if it's Build Your Own
+
         double totalPrice = basePrice + (TOPPING_PRICE * toppingCount);
 
-        // Update the price display (ensure pizzaPrice is not null before calling setText)
+        // Update the price display
         if (pizzaPrice != null) {
             pizzaPrice.setText(String.format("$%.2f", totalPrice));
         } else {
@@ -280,7 +329,6 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
     }
 
     private double calculateBasePrice(String type, String size) {
-        // Calculate the base price for different types and sizes of pizza
         switch (type) {
             case "Deluxe":
                 return size.equals("S") ? DELUXE_S_PRICE : size.equals("M") ? DELUXE_M_PRICE : DELUXE_L_PRICE;
@@ -384,7 +432,6 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
      * Resets the UI after an order is placed to allow for a new order.
      */
     private void resetOrderForm() {
-        // Reset all fields to default
         chooseType.setSelection(0);
         sizeGroup.clearCheck();
         sausage.setChecked(false);
