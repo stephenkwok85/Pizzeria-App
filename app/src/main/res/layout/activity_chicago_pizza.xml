@@ -27,7 +27,6 @@
             android:layout_height="200dp"
             android:contentDescription="Pizza Image"
             android:scaleType="centerCrop"
-            android:src="@drawable/ch_pizza_image_placeholder"
             android:layout_marginBottom="16dp" />
 
         <!-- Choose Type -->
@@ -56,16 +55,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Crust" />
+                android:text="Crust:" />
 
-            <EditText
-                android:id="@+id/crustField2"
-                android:layout_width="100dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:editable="false"
-                android:focusable="false" />
+            <TextView
+                android:id="@+id/crustTypeView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="Crust Type" />
+
         </LinearLayout>
 
         <!-- Size -->
