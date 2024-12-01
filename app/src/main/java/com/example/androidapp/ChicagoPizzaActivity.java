@@ -417,15 +417,15 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
      */
     private void addPizzaToOrder(Pizza pizza) {
         // Assuming OrderManager has been set up to manage orders
-        OrderManager.addOrderToCurrentOrder(pizza);
+        //OrderManager.addOrderToCurrentOrder(pizza);
     }
 
     /**
      * Displays a confirmation message to the user once an order is added.
      */
     private void showOrderConfirmation() {
-        int orderNumber = OrderManager.getCurrentOrderNumber();
-        Toast.makeText(this, "Order #" + orderNumber + " has been added.", Toast.LENGTH_LONG).show();
+        //int orderNumber = OrderManager.getCurrentOrderNumber();
+        //Toast.makeText(this, "Order #" + orderNumber + " has been added.", Toast.LENGTH_LONG).show();
     }
 
     /**

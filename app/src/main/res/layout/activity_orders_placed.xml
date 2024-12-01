@@ -1,6 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Placed Order Title -->
+    <TextView
+        android:id="@+id/placedOrderTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Placed Order"
+        android:textSize="43sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Order Number Label -->
+    <TextView
+        android:id="@+id/orderNumberLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order Number"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/placedOrderTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- Order Number Dropdown -->
+    <Spinner
+        android:id="@+id/placedOrderNumberDropdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/placedOrderTitle"
+        app:layout_constraintStart_toEndOf="@id/orderNumberLabel"
+        android:layout_marginStart="8dp" />
+
+    <!-- Placed Order Table -->
+    <ListView
+        android:id="@+id/placedOrderList"
+        android:layout_width="361dp"
+        android:layout_height="483dp"
+        android:divider="#CCCCCC"
+        android:dividerHeight="1dp"
+        app:layout_constraintBottom_toTopOf="@id/orderTotalLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/orderNumberLabel" />
+
+    <!-- Order Total Label -->
+
+    <!-- Order Total Field -->
+
+    <!-- Buttons -->
+
+    <TextView
+        android:id="@+id/orderTotalLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="32dp"
+        android:text="Order Total: $"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/placedOrderList" />
+
+    <Button
+        android:id="@+id/exportOrderButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="40dp"
+        android:text="Export Order"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/orderTotalLabel" />
+
+    <Button
+        android:id="@+id/cancelOrderButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="20dp"
+        android:text="Cancel Order"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/orderTotalLabel" />
+
+    <EditText
+        android:id="@+id/orderTotalField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:editable="false"
+        android:focusable="false"
+        android:inputType="numberDecimal"
+        app:layout_constraintStart_toEndOf="@id/orderTotalLabel"
+        app:layout_constraintTop_toBottomOf="@id/placedOrderList" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

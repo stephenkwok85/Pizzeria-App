@@ -1,6 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
+    <!-- Current Order Title -->
+    <TextView
+        android:id="@+id/currentOrderTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Current Order"
+        android:textSize="33sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Order Number Label -->
+    <TextView
+        android:id="@+id/orderNumberLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="20dp"
+        android:text="Order Number"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/currentOrderTitle" />
+
+    <!-- Order Number Input -->
+    <EditText
+        android:id="@+id/orderNumberInput"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/currentOrderTitle"
+        app:layout_constraintStart_toEndOf="@id/orderNumberLabel"
+        android:layout_marginStart="8dp" />
+
+    <!-- Search Order Button -->
+    <Button
+        android:id="@+id/searchOrderButton"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:text="Search Order"
+        app:layout_constraintTop_toBottomOf="@id/currentOrderTitle"
+        app:layout_constraintStart_toEndOf="@id/orderNumberInput"
+        android:layout_marginStart="16dp" />
+
+    <!-- Current Order List -->
+    <ListView
+        android:id="@+id/currentOrderList"
+        android:layout_width="373dp"
+        android:layout_height="405dp"
+        android:layout_marginTop="16dp"
+        android:divider="#CCCCCC"
+        android:dividerHeight="1dp"
+        app:layout_constraintBottom_toTopOf="@id/totalLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/orderNumberLabel" />
+
+    <!-- Subtotal and Tax Row -->
+    <LinearLayout
+        android:id="@+id/totalLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/currentOrderList"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/subtotalLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subtotal: $" />
+        <EditText
+            android:id="@+id/subtotalInput"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:focusable="false"
+            android:editable="false"
+            android:layout_marginStart="8dp" />
+
+        <TextView
+            android:id="@+id/taxLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="Tax: $" />
+        <EditText
+            android:id="@+id/taxInput"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:focusable="false"
+            android:editable="false"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Buttons Row -->
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/totalLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/removePizzaButton"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:text="Remove Pizza"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/clearAllOrdersButton"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:text="Clear All Orders" />
+    </LinearLayout>
+
+    <!-- Order Total and Complete Order Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/buttonLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/orderTotalLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Order Total: $" />
+        <EditText
+            android:id="@+id/orderTotalInput"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:focusable="false"
+            android:editable="false"
+            android:layout_marginStart="8dp" />
+
+        <Button
+            android:id="@+id/completeOrderButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Complete Order"
+            android:layout_marginStart="16dp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
