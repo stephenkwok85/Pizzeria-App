@@ -11,7 +11,7 @@
 
         <!-- NY Style -->
         <TextView
-            android:id="@+id/chicagoStyleLabel"
+            android:id="@+id/NYStyleLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="NY Style"
@@ -27,16 +27,15 @@
             android:layout_height="200dp"
             android:contentDescription="Pizza Image"
             android:scaleType="centerCrop"
-            android:src="@drawable/ny_pizza_image_placeholder"
             android:layout_marginBottom="16dp" />
 
         <!-- Choose Type -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="24dp"
-            android:layout_marginBottom="16dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_marginBottom="16dp">
 
             <TextView
                 android:id="@+id/chooseTypeLabel"
@@ -47,25 +46,25 @@
 
             <Spinner
                 android:id="@+id/chooseTypeSpinner"
-                android:layout_width="139dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp" />
 
             <TextView
-                android:id="@+id/crustLabel"
+                android:id="@+id/NYCrustLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Crust" />
+                android:padding="16dp"
+                android:text="Crust:" />
 
-            <EditText
-                android:id="@+id/crustField"
-                android:layout_width="100dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="8dp"
+            <TextView
+                android:id="@+id/NYCrustTypeView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:editable="false"
-                android:focusable="false" />
+                android:text="Crust:" />
+
         </LinearLayout>
 
         <!-- Size -->
