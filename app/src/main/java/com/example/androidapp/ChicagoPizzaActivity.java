@@ -232,33 +232,55 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         if (isChecked) {
             if (selectedToppingsCount < MAX_TOPPINGS) {
                 selectedToppingsCount++;
+                if (selectedToppingsCount == MAX_TOPPINGS) {
+                    // Disable unchecked toppings
+                    disableUncheckedToppings();
+                }
             } else {
                 Toast.makeText(ChicagoPizzaActivity.this, "You can only select up to " + MAX_TOPPINGS + " toppings.", Toast.LENGTH_SHORT).show();
-                // Uncheck the last selected topping
-                uncheckLastTopping();
             }
         } else {
             selectedToppingsCount--;
+            if (selectedToppingsCount < MAX_TOPPINGS) {
+                // Re-enable unchecked toppings
+                enableUncheckedToppings();
+            }
         }
         updatePizzaPrice();
     }
 
-    private void uncheckLastTopping() {
-        // Check all toppings and uncheck the last one if the limit of MAX_TOPPINGS is reached
-        if (sausage.isChecked()) sausage.setChecked(false);
-        else if (pepperoni.isChecked()) pepperoni.setChecked(false);
-        else if (greenPepper.isChecked()) greenPepper.setChecked(false);
-        else if (onion.isChecked()) onion.setChecked(false);
-        else if (mushroom.isChecked()) mushroom.setChecked(false);
-        else if (bbqChicken.isChecked()) bbqChicken.setChecked(false);
-        else if (beef.isChecked()) beef.setChecked(false);
-        else if (ham.isChecked()) ham.setChecked(false);
-        else if (provolone.isChecked()) provolone.setChecked(false);
-        else if (cheddar.isChecked()) cheddar.setChecked(false);
-        else if (olives.isChecked()) olives.setChecked(false);
-        else if (spinach.isChecked()) spinach.setChecked(false);
-        else if (pineapple.isChecked()) pineapple.setChecked(false);
-        else if (bacon.isChecked()) bacon.setChecked(false);
+    private void disableUncheckedToppings() {
+        if (!sausage.isChecked()) sausage.setEnabled(false);
+        if (!pepperoni.isChecked()) pepperoni.setEnabled(false);
+        if (!greenPepper.isChecked()) greenPepper.setEnabled(false);
+        if (!onion.isChecked()) onion.setEnabled(false);
+        if (!mushroom.isChecked()) mushroom.setEnabled(false);
+        if (!bbqChicken.isChecked()) bbqChicken.setEnabled(false);
+        if (!beef.isChecked()) beef.setEnabled(false);
+        if (!ham.isChecked()) ham.setEnabled(false);
+        if (!provolone.isChecked()) provolone.setEnabled(false);
+        if (!cheddar.isChecked()) cheddar.setEnabled(false);
+        if (!olives.isChecked()) olives.setEnabled(false);
+        if (!spinach.isChecked()) spinach.setEnabled(false);
+        if (!pineapple.isChecked()) pineapple.setEnabled(false);
+        if (!bacon.isChecked()) bacon.setEnabled(false);
+    }
+
+    private void enableUncheckedToppings() {
+        if (!sausage.isChecked()) sausage.setEnabled(true);
+        if (!pepperoni.isChecked()) pepperoni.setEnabled(true);
+        if (!greenPepper.isChecked()) greenPepper.setEnabled(true);
+        if (!onion.isChecked()) onion.setEnabled(true);
+        if (!mushroom.isChecked()) mushroom.setEnabled(true);
+        if (!bbqChicken.isChecked()) bbqChicken.setEnabled(true);
+        if (!beef.isChecked()) beef.setEnabled(true);
+        if (!ham.isChecked()) ham.setEnabled(true);
+        if (!provolone.isChecked()) provolone.setEnabled(true);
+        if (!cheddar.isChecked()) cheddar.setEnabled(true);
+        if (!olives.isChecked()) olives.setEnabled(true);
+        if (!spinach.isChecked()) spinach.setEnabled(true);
+        if (!pineapple.isChecked()) pineapple.setEnabled(true);
+        if (!bacon.isChecked()) bacon.setEnabled(true);
     }
 
     private void updatePizzaPrice() {
