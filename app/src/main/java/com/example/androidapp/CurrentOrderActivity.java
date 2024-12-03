@@ -31,6 +31,8 @@ public class CurrentOrderActivity extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private static final double TAX_RATE = 0.06625;
 
+    private int selectedPizzaIndex = -1; // 선택된 항목의 인덱스
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,15 @@ public class CurrentOrderActivity extends AppCompatActivity {
         // Set up ListView adapter
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
         currentOrderList.setAdapter(adapter);
+
+        // Enable single-choice mode for ListView
+        currentOrderList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+
+        // Set up ListView item click listener
+        currentOrderList.setOnItemClickListener((parent, view, position, id) -> {
+            selectedPizzaIndex = position; // 선택된 항목 인덱스 저장
+            Toast.makeText(this, "Selected Pizza: " + (position + 1), Toast.LENGTH_SHORT).show();
+        });
 
         // Set button listeners
         searchOrderButton.setOnClickListener(v -> searchOrder());
@@ -77,13 +88,20 @@ public class CurrentOrderActivity extends AppCompatActivity {
     }
 
     private void removeSelectedPizza() {
-        int position = currentOrderList.getCheckedItemPosition();
-        if (position >= 0 && position < currentOrderPizzas.size()) {
-            currentOrderPizzas.remove(position);
+        if (selectedPizzaIndex >= 0 && selectedPizzaIndex < currentOrderPizzas.size()) {
+            // Remove the selected pizza
+            currentOrderPizzas.remove(selectedPizzaIndex);
+
+            // Update ListView and summary
             updateListView();
             updateOrderSummary();
+
+            // Reset the selected index
+            selectedPizzaIndex = -1;
+
+            Toast.makeText(this, "Selected pizza removed.", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "Please select a pizza to remove!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please select a pizza to remove.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -107,12 +125,11 @@ public class CurrentOrderActivity extends AppCompatActivity {
             // Show confirmation message
             Toast.makeText(this, "Order #" + orderNumber + " has been completed!", Toast.LENGTH_SHORT).show();
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "Invalid order number! Please enter a valid number.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid order number!", Toast.LENGTH_SHORT).show();
         } catch (IllegalArgumentException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-
 
     private void updateListView() {
         List<String> pizzaDescriptions = new ArrayList<>();

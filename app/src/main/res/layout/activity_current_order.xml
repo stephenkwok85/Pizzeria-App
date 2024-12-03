@@ -54,15 +54,15 @@
     <!-- Current Order List -->
     <ListView
         android:id="@+id/currentOrderList"
-        android:layout_width="373dp"
-        android:layout_height="405dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
         android:divider="#CCCCCC"
         android:dividerHeight="1dp"
-        app:layout_constraintBottom_toTopOf="@id/totalLayout"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:choiceMode="singleChoice"
+        app:layout_constraintTop_toBottomOf="@id/orderNumberLabel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/orderNumberLabel" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/totalLayout" />
 
     <!-- Subtotal and Tax Row -->
     <LinearLayout
