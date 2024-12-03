@@ -136,6 +136,7 @@ public class CurrentOrderActivity extends AppCompatActivity {
         for (Pizza pizza : currentOrderPizzas) {
             StringBuilder description = new StringBuilder();
             description.append(pizza.getSize().toString()).append(" ");
+            description.append(pizza.getStyle()).append(" ");
             description.append(pizza.getClass().getSimpleName()).append(" - ");
             description.append("$").append(String.format("%.2f", pizza.price()));
 
