@@ -14,12 +14,10 @@ import pizzeria_package.Pizza;
  * completing orders, and managing order numbers.
  */
 public class OrderManager {
-    private static OrderManager instance; // Singleton instance
-    private final Map<Integer, Order> orders = new HashMap<>(); // Stores orders by order number
-    private int nextOrderNumber = 1; // Tracks the next order number
-    private int currentOrderNumber = 0; // Tracks the current active order
-
-    // Private constructor to enforce singleton pattern
+    private static OrderManager instance;
+    private final Map<Integer, Order> orders = new HashMap<>();
+    private int nextOrderNumber = 1;
+    private int currentOrderNumber = 0;
     private OrderManager() {}
 
     /**
@@ -35,9 +33,9 @@ public class OrderManager {
     }
 
     public void completeOrder(int orderNumber) {
-        Order order = orders.get(orderNumber); // 주문 번호에 해당하는 주문 가져오기
+        Order order = orders.get(orderNumber);
         if (order != null && !order.isPlaced()) {
-            order.placeOrder(); // 주문을 완료 상태로 변경
+            order.placeOrder();
         } else {
             throw new IllegalArgumentException("Order not found or already completed.");
         }
