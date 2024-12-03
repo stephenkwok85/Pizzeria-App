@@ -325,7 +325,7 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
 
         Pizza pizza = null;
 
-        // Use the pizzaFactory instance to create the pizza based on the selected type
+        // Create the pizza based on the selected type
         switch (selectedType) {
             case "Deluxe":
                 pizza = pizzaFactory.createDeluxe();
@@ -347,15 +347,21 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
             pizza.setToppings(selectedToppings);
         }
 
-        // Save the order
-        OrderManager.addOrderToCurrentOrder(pizza);
+        // Save the order using OrderManager
+        try {
+            OrderManager.getInstance().addOrderToCurrentOrder(pizza);
 
-        // Retrieve the current order number
-        int orderNumber = OrderManager.getCurrentOrderNumber();
+            // Retrieve the current order number
+            int orderNumber = OrderManager.getInstance().getCurrentOrderNumber();
 
-        // Show a confirmation message with the order number
-        Toast.makeText(ChicagoPizzaActivity.this, "Order #" + orderNumber + " added to your cart", Toast.LENGTH_SHORT).show();
+            // Show a confirmation message with the order number
+            Toast.makeText(ChicagoPizzaActivity.this, "Order #" + orderNumber + " added to your cart", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to add pizza to order: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e("ChicagoPizzaActivity", "Error adding order", e);
+        }
     }
+
 
     private Size getPizzaSize() {
         if (sSize.isChecked()) {
