@@ -39,7 +39,12 @@ public class OrderManager {
         } else {
             throw new IllegalArgumentException("Order not found or already completed.");
         }
+
+        if (orderNumber == currentOrderNumber) {
+            currentOrderNumber = 0;
+        }
     }
+
 
 
     /**
