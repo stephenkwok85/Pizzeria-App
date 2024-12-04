@@ -22,12 +22,12 @@ import pizzeria_package.Topping;
 
 public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingViewHolder> {
     private final Context context;
-    private final List<Topping> toppings;
+    private List<Topping> toppings;
     private final int maxToppings;
     private final ToppingSelectionListener listener;
 
     private final Set<Topping> selectedToppings = new HashSet<>();
-    private boolean isCustomizable = true;
+    private boolean isEditable = true;
 
     public ToppingAdapter(Context context, List<Topping> toppings, int maxToppings, ToppingSelectionListener listener) {
         this.context = context;
@@ -35,6 +35,27 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
         this.maxToppings = maxToppings;
         this.listener = listener;
     }
+
+    /**
+     * Sets the toppings and whether they are editable.
+     *
+     * @param toppings   The list of toppings to display.
+     * @param isEditable True if the toppings can be customized; false otherwise.
+     */
+    public void setToppings(List<Topping> toppings, boolean isEditable) {
+        this.toppings = toppings;
+        this.isEditable = isEditable;
+
+        if (!isEditable) {
+            selectedToppings.clear();
+            selectedToppings.addAll(toppings);
+        } else {
+            selectedToppings.clear();
+        }
+
+        notifyDataSetChanged();
+    }
+
 
     @NonNull
     @Override
@@ -53,21 +74,25 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
 
         // Set checkbox state
         holder.toppingCheckBox.setChecked(selectedToppings.contains(topping));
-        holder.toppingCheckBox.setEnabled(isCustomizable || selectedToppings.contains(topping));
+        holder.toppingCheckBox.setEnabled(isEditable);
 
         // Handle checkbox interaction
         holder.toppingCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                if (selectedToppings.size() < maxToppings) {
-                    selectedToppings.add(topping);
+            if (isEditable) {
+                if (isChecked) {
+                    if (selectedToppings.size() < maxToppings) {
+                        selectedToppings.add(topping);
+                    } else {
+                        buttonView.setChecked(false);
+                        Toast.makeText(context, "You can only select up to " + maxToppings + " toppings.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    buttonView.setChecked(false);
-                    Toast.makeText(context, "You can only select up to " + maxToppings + " toppings.", Toast.LENGTH_SHORT).show();
+                    selectedToppings.remove(topping);
                 }
+                listener.onToppingSelected(selectedToppings.size());
             } else {
-                selectedToppings.remove(topping);
+                buttonView.setChecked(true);
             }
-            listener.onToppingSelected(selectedToppings.size());
         });
     }
 
@@ -92,16 +117,6 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
     public void preselectToppings(Topping... preselectedToppings) {
         selectedToppings.clear();
         selectedToppings.addAll(Arrays.asList(preselectedToppings));
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Sets whether the toppings are customizable.
-     *
-     * @param customizable True if toppings can be customized; false otherwise.
-     */
-    public void setCustomizable(boolean customizable) {
-        isCustomizable = customizable;
         notifyDataSetChanged();
     }
 

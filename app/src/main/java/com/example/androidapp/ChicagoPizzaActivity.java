@@ -1,7 +1,7 @@
 package com.example.androidapp;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -51,14 +51,13 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         // Initialize views
         initializeViews();
 
-        // Set up Spinner
-        setupSpinner();
-
-        // Initialize RecyclerView for toppings
+        // Set up RecyclerView for toppings
         setupRecyclerView();
 
-        // Set default pizza type and size
-        chooseType.setSelection(3); // Default to "Build Your Own"
+        // Set up Spinner for pizza type
+        setupSpinner();
+
+        chooseType.setSelection(3);
         setPizzaOptions("Build Your Own");
         sSize.setChecked(true);
 
@@ -75,10 +74,17 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         sizeGroup = findViewById(R.id.sizeRadioGroup);
         pizzaPrice = findViewById(R.id.pizzaPriceField);
         pizzaImage = findViewById(R.id.pizzaImage);
-        addToOrderButton = findViewById(R.id.addToOrderButton);
         toppingsRecyclerView = findViewById(R.id.toppingsRecyclerView);
+        addToOrderButton = findViewById(R.id.addToOrderButton);
 
         pizzaFactory = new ChicagoPizza();
+    }
+
+    private void setupRecyclerView() {
+        toppingsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        List<Topping> toppingsList = Arrays.asList(Topping.values());
+        toppingAdapter = new ToppingAdapter(this, toppingsList, MAX_TOPPINGS, this::onToppingSelected);
+        toppingsRecyclerView.setAdapter(toppingAdapter);
     }
 
     private void setupSpinner() {
@@ -89,27 +95,17 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
 
         chooseType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, android.view.View view, int position, long id) {
-                Object selectedItem = parent.getItemAtPosition(position);
-                if (selectedItem instanceof String) {
-                    String selectedType = (String) selectedItem;
-                    setPizzaOptions(selectedType);
-                    updatePizzaPrice();
-                }
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedType = (String) parent.getItemAtPosition(position);
+                setPizzaOptions(selectedType);
+                updatePizzaPrice();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // No action needed
+                // Do nothing
             }
         });
-    }
-
-    private void setupRecyclerView() {
-        toppingsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        List<Topping> toppingsList = Arrays.asList(Topping.values());
-        toppingAdapter = new ToppingAdapter(this, toppingsList, MAX_TOPPINGS, this::onToppingSelected);
-        toppingsRecyclerView.setAdapter(toppingAdapter);
     }
 
     private void setupListeners() {
@@ -122,32 +118,47 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         toppingAdapter.resetSelection();
 
         String crustType;
+        int imageResource;
+
         switch (pizzaType) {
             case "Deluxe":
                 crustType = "Deep Dish";
-                toppingAdapter.preselectToppings(Topping.SAUSAGE, Topping.PEPPERONI, Topping.GREEN_PEPPER, Topping.ONION, Topping.MUSHROOM);
+                imageResource = R.drawable.ch_deluxe;
+                toppingAdapter.setToppings(Arrays.asList(
+                        Topping.SAUSAGE, Topping.PEPPERONI, Topping.GREEN_PEPPER, Topping.ONION, Topping.MUSHROOM
+                ), false);
                 isCustomizable = false;
                 break;
             case "BBQ Chicken":
                 crustType = "Pan";
-                toppingAdapter.preselectToppings(Topping.BBQ_CHICKEN, Topping.GREEN_PEPPER, Topping.PROVOLONE, Topping.CHEDDAR);
+                imageResource = R.drawable.ch_bbq;
+                toppingAdapter.setToppings(Arrays.asList(
+                        Topping.BBQ_CHICKEN, Topping.GREEN_PEPPER, Topping.PROVOLONE, Topping.CHEDDAR
+                ), false);
                 isCustomizable = false;
                 break;
             case "Meatzza":
                 crustType = "Stuffed";
-                toppingAdapter.preselectToppings(Topping.SAUSAGE, Topping.PEPPERONI, Topping.BEEF, Topping.HAM);
+                imageResource = R.drawable.ch_meat;
+                toppingAdapter.setToppings(Arrays.asList(
+                        Topping.SAUSAGE, Topping.PEPPERONI, Topping.BEEF, Topping.HAM
+                ), false);
                 isCustomizable = false;
                 break;
             case "Build Your Own":
+            default:
                 crustType = "Pan";
+                imageResource = R.drawable.ch_build;
+                toppingAdapter.resetSelection();
+                toppingAdapter.setToppings(Arrays.asList(Topping.values()), true);
+
                 isCustomizable = true;
                 break;
-            default:
-                crustType = "";
+
         }
 
         crustField.setText(crustType);
-        toppingAdapter.setCustomizable(isCustomizable);
+        pizzaImage.setImageResource(imageResource);
         updatePizzaPrice();
     }
 
@@ -165,9 +176,9 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
     }
 
     private double calculateBasePrice() {
-        if (sSize.isChecked()) return 16.99; // Example price
-        if (mSize.isChecked()) return 18.99; // Example price
-        if (lSize.isChecked()) return 20.99; // Example price
+        if (sSize.isChecked()) return 15.99; // Example base price for Small
+        if (mSize.isChecked()) return 17.99; // Example base price for Medium
+        if (lSize.isChecked()) return 19.99; // Example base price for Large
         return 0.0;
     }
 
