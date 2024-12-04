@@ -140,4 +140,19 @@ public class OrderManager {
         return null;
     }
 
+    /**
+     * Removes a pizza from a specific order by order number.
+     *
+     * @param orderNumber The order number from which the pizza will be removed.
+     * @param pizza The pizza to be removed from the order.
+     */
+    public void removePizzaFromOrder(int orderNumber, Pizza pizza) {
+        Order order = orders.get(orderNumber);
+        if (order != null && !order.isPlaced()) {
+            // Remove the pizza from the order
+            order.removePizza(pizza);
+        } else {
+            throw new IllegalArgumentException("Order not found or already completed.");
+        }
+    }
 }
