@@ -56,6 +56,14 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
         notifyDataSetChanged();
     }
 
+    /**
+     * Retrieves the currently selected toppings.
+     *
+     * @return A set of selected toppings.
+     */
+    public Set<Topping> getSelectedToppings() {
+        return new HashSet<>(selectedToppings);
+    }
 
     @NonNull
     @Override
