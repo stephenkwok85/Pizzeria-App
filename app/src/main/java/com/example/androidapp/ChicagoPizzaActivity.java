@@ -2,13 +2,10 @@ package com.example.androidapp;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -17,46 +14,34 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import pizzeria_package.ChicagoPizza;
-import pizzeria_package.Pizza;
 import pizzeria_package.PizzaFactory;
-import pizzeria_package.BuildYourOwn;
 import pizzeria_package.Topping;
-import pizzeria_package.Size;
 
 public class ChicagoPizzaActivity extends AppCompatActivity {
     private static final double TOPPING_PRICE = 1.69;
     private static final int MAX_TOPPINGS = 7;
-    private static final double DELUXE_S_PRICE = 16.99;
-    private static final double DELUXE_M_PRICE = 18.99;
-    private static final double DELUXE_L_PRICE = 20.99;
-    private static final double BBQ_S_PRICE = 14.99;
-    private static final double BBQ_M_PRICE = 16.99;
-    private static final double BBQ_L_PRICE = 19.99;
-    private static final double MEATZZA_S_PRICE = 17.99;
-    private static final double MEATZZA_M_PRICE = 19.99;
-    private static final double MEATZZA_L_PRICE = 21.99;
-    private static final double BYO_S_PRICE = 8.99;
-    private static final double BYO_M_PRICE = 10.99;
-    private static final double BYO_L_PRICE = 12.99;
 
     private Spinner chooseType;
     private TextView crustField;
     private RadioButton sSize, mSize, lSize;
     private RadioGroup sizeGroup;
-    private CheckBox sausage, pepperoni, greenPepper, onion, mushroom, bbqChicken, beef, ham, provolone, cheddar, olives, spinach, pineapple, bacon;
-    private TextView pizzaPrice;
+    private EditText pizzaPrice;
     private ImageView pizzaImage;
     private Button addToOrderButton;
+    private RecyclerView toppingsRecyclerView;
 
     private boolean isCustomizable = false;
     private int selectedToppingsCount = 0;
 
     private PizzaFactory pizzaFactory;
+    private ToppingAdapter toppingAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,333 +49,129 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chicago_pizza);
 
         // Initialize views
+        initializeViews();
+
+        // Set up Spinner
+        setupSpinner();
+
+        // Initialize RecyclerView for toppings
+        setupRecyclerView();
+
+        // Set default pizza type and size
+        chooseType.setSelection(3); // Default to "Build Your Own"
+        setPizzaOptions("Build Your Own");
+        sSize.setChecked(true);
+
+        // Set up listeners
+        setupListeners();
+    }
+
+    private void initializeViews() {
         chooseType = findViewById(R.id.chooseTypeSpinner);
         crustField = findViewById(R.id.crustTypeView);
         sSize = findViewById(R.id.sizeSmall);
         mSize = findViewById(R.id.sizeMedium);
         lSize = findViewById(R.id.sizeLarge);
         sizeGroup = findViewById(R.id.sizeRadioGroup);
-        sausage = findViewById(R.id.toppingSausage);
-        pepperoni = findViewById(R.id.toppingPepperoni);
-        greenPepper = findViewById(R.id.toppingGreenPepper);
-        onion = findViewById(R.id.toppingOnion);
-        mushroom = findViewById(R.id.toppingMushroom);
-        bbqChicken = findViewById(R.id.toppingBBQChicken);
-        beef = findViewById(R.id.toppingBeef);
-        ham = findViewById(R.id.toppingHam);
-        provolone = findViewById(R.id.toppingProvolone);
-        cheddar = findViewById(R.id.toppingCheddar);
-        olives = findViewById(R.id.toppingOlives);
-        spinach = findViewById(R.id.toppingSpinach);
-        pineapple = findViewById(R.id.toppingPineapple);
-        bacon = findViewById(R.id.toppingBacon);
         pizzaPrice = findViewById(R.id.pizzaPriceField);
         pizzaImage = findViewById(R.id.pizzaImage);
         addToOrderButton = findViewById(R.id.addToOrderButton);
+        toppingsRecyclerView = findViewById(R.id.toppingsRecyclerView);
 
         pizzaFactory = new ChicagoPizza();
+    }
 
-        // Set up spinner
+    private void setupSpinner() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
                 new String[]{"Deluxe", "BBQ Chicken", "Meatzza", "Build Your Own"});
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         chooseType.setAdapter(adapter);
 
-        // Set default selection for pizza type to Build Your Own
-        chooseType.setSelection(3);  // "Build Your Own" is at index 3
-        setPizzaOptions("Build Your Own");  // Set the pizza options to Build Your Own
-
-        // Set default size to Small
-        sSize.setChecked(true);  // Select the small size radio button
-
-        // Set listener for the pizza type spinner
         chooseType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String selectedType = parentView.getItemAtPosition(position).toString();
-                setPizzaOptions(selectedType);
-                updatePizzaPrice();
+            public void onItemSelected(AdapterView<?> parent, android.view.View view, int position, long id) {
+                Object selectedItem = parent.getItemAtPosition(position);
+                if (selectedItem instanceof String) {
+                    String selectedType = (String) selectedItem;
+                    setPizzaOptions(selectedType);
+                    updatePizzaPrice();
+                }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Do nothing if no selection
+            public void onNothingSelected(AdapterView<?> parent) {
+                // No action needed
             }
         });
+    }
 
-        // Set listener for size radio group
-        sizeGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            updatePizzaPrice();
-        });
+    private void setupRecyclerView() {
+        toppingsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        List<Topping> toppingsList = Arrays.asList(Topping.values());
+        toppingAdapter = new ToppingAdapter(this, toppingsList, MAX_TOPPINGS, this::onToppingSelected);
+        toppingsRecyclerView.setAdapter(toppingAdapter);
+    }
 
-        // Set up topping listeners
-        setupToppingListeners();
-
-        // Update pizza price
-        updatePizzaPrice();
-
-        // Add to Order button listener
-        addToOrderButton.setOnClickListener(view -> {
-            Log.d("PizzaOrder", "Add to Order button clicked");
-            addOrder();
-        });
+    private void setupListeners() {
+        sizeGroup.setOnCheckedChangeListener((group, checkedId) -> updatePizzaPrice());
+        addToOrderButton.setOnClickListener(view -> addOrder());
     }
 
     private void setPizzaOptions(String pizzaType) {
-        resetToppingSelections();
         selectedToppingsCount = 0;
+        toppingAdapter.resetSelection();
 
-        String crustType = "";
-
+        String crustType;
         switch (pizzaType) {
             case "Deluxe":
                 crustType = "Deep Dish";
-                selectToppings(sausage, pepperoni, greenPepper, onion, mushroom);
-                crustField.setText(crustType);
-                lockToppings(true);
+                toppingAdapter.preselectToppings(Topping.SAUSAGE, Topping.PEPPERONI, Topping.GREEN_PEPPER, Topping.ONION, Topping.MUSHROOM);
+                isCustomizable = false;
                 break;
             case "BBQ Chicken":
                 crustType = "Pan";
-                selectToppings(bbqChicken, greenPepper, provolone, cheddar);
-                crustField.setText(crustType);
-                lockToppings(true);
+                toppingAdapter.preselectToppings(Topping.BBQ_CHICKEN, Topping.GREEN_PEPPER, Topping.PROVOLONE, Topping.CHEDDAR);
+                isCustomizable = false;
                 break;
             case "Meatzza":
                 crustType = "Stuffed";
-                selectToppings(sausage, pepperoni, beef, ham);
-                crustField.setText(crustType);
-                lockToppings(true);
+                toppingAdapter.preselectToppings(Topping.SAUSAGE, Topping.PEPPERONI, Topping.BEEF, Topping.HAM);
+                isCustomizable = false;
                 break;
             case "Build Your Own":
                 crustType = "Pan";
-                selectedToppingsCount = 0;
                 isCustomizable = true;
-                crustField.setText(crustType);
-                lockToppings(false);
                 break;
+            default:
+                crustType = "";
         }
-    }
 
-    private void selectToppings(CheckBox... toppings) {
-        for (CheckBox topping : toppings) {
-            topping.setChecked(true);
-        }
-    }
-
-    private void resetToppingSelections() {
-        sausage.setChecked(false);
-        pepperoni.setChecked(false);
-        greenPepper.setChecked(false);
-        onion.setChecked(false);
-        mushroom.setChecked(false);
-        bbqChicken.setChecked(false);
-        beef.setChecked(false);
-        ham.setChecked(false);
-        provolone.setChecked(false);
-        cheddar.setChecked(false);
-        olives.setChecked(false);
-        spinach.setChecked(false);
-        pineapple.setChecked(false);
-        bacon.setChecked(false);
-    }
-
-    private void lockToppings(boolean lock) {
-        sausage.setEnabled(!lock);
-        pepperoni.setEnabled(!lock);
-        greenPepper.setEnabled(!lock);
-        onion.setEnabled(!lock);
-        mushroom.setEnabled(!lock);
-        bbqChicken.setEnabled(!lock);
-        beef.setEnabled(!lock);
-        ham.setEnabled(!lock);
-        provolone.setEnabled(!lock);
-        cheddar.setEnabled(!lock);
-        olives.setEnabled(!lock);
-        spinach.setEnabled(!lock);
-        pineapple.setEnabled(!lock);
-        bacon.setEnabled(!lock);
-    }
-
-    private void setupToppingListeners() {
-        sausage.setOnCheckedChangeListener((buttonView, isChecked) -> updateToppingCount(isChecked));
-        pepperoni.setOnCheckedChangeListener((buttonView, isChecked) -> updateToppingCount(isChecked));
-        greenPepper.setOnCheckedChangeListener((buttonView, isChecked) -> updateToppingCount(isChecked));
-        onion.setOnCheckedChangeListener((buttonView, isChecked) -> updateToppingCount(isChecked));
-        mushroom.setOnCheckedChangeListener((buttonView, isChecked) -> updateToppingCount(isChecked));
-        bbqChicken.setOnCheckedChangeListener((buttonView, isChecked) -> updateToppingCount(isChecked));
-        beef.setOnCheckedChangeListener((buttonView, isChecked) -> updateToppingCount(isChecked));
-        ham.setOnCheckedChangeListener((buttonView, isChecked) -> updateToppingCount(isChecked));
-        provolone.setOnCheckedChangeListener((buttonView, isChecked) -> updateToppingCount(isChecked));
-        cheddar.setOnCheckedChangeListener((buttonView, isChecked) -> updateToppingCount(isChecked));
-        olives.setOnCheckedChangeListener((buttonView, isChecked) -> updateToppingCount(isChecked));
-        spinach.setOnCheckedChangeListener((buttonView, isChecked) -> updateToppingCount(isChecked));
-        pineapple.setOnCheckedChangeListener((buttonView, isChecked) -> updateToppingCount(isChecked));
-        bacon.setOnCheckedChangeListener((buttonView, isChecked) -> updateToppingCount(isChecked));
-    }
-
-    private void updateToppingCount(boolean isChecked) {
-        if (isChecked) {
-            if (selectedToppingsCount < MAX_TOPPINGS) {
-                selectedToppingsCount++;
-                if (selectedToppingsCount == MAX_TOPPINGS) {
-                    // Disable unchecked toppings
-                    disableUncheckedToppings();
-                }
-            } else {
-                Toast.makeText(ChicagoPizzaActivity.this, "You can only select up to " + MAX_TOPPINGS + " toppings.", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            selectedToppingsCount--;
-            if (selectedToppingsCount < MAX_TOPPINGS) {
-                // Re-enable unchecked toppings
-                enableUncheckedToppings();
-            }
-        }
+        crustField.setText(crustType);
+        toppingAdapter.setCustomizable(isCustomizable);
         updatePizzaPrice();
     }
 
-    private void disableUncheckedToppings() {
-        if (!sausage.isChecked()) sausage.setEnabled(false);
-        if (!pepperoni.isChecked()) pepperoni.setEnabled(false);
-        if (!greenPepper.isChecked()) greenPepper.setEnabled(false);
-        if (!onion.isChecked()) onion.setEnabled(false);
-        if (!mushroom.isChecked()) mushroom.setEnabled(false);
-        if (!bbqChicken.isChecked()) bbqChicken.setEnabled(false);
-        if (!beef.isChecked()) beef.setEnabled(false);
-        if (!ham.isChecked()) ham.setEnabled(false);
-        if (!provolone.isChecked()) provolone.setEnabled(false);
-        if (!cheddar.isChecked()) cheddar.setEnabled(false);
-        if (!olives.isChecked()) olives.setEnabled(false);
-        if (!spinach.isChecked()) spinach.setEnabled(false);
-        if (!pineapple.isChecked()) pineapple.setEnabled(false);
-        if (!bacon.isChecked()) bacon.setEnabled(false);
-    }
-
-    private void enableUncheckedToppings() {
-        if (!sausage.isChecked()) sausage.setEnabled(true);
-        if (!pepperoni.isChecked()) pepperoni.setEnabled(true);
-        if (!greenPepper.isChecked()) greenPepper.setEnabled(true);
-        if (!onion.isChecked()) onion.setEnabled(true);
-        if (!mushroom.isChecked()) mushroom.setEnabled(true);
-        if (!bbqChicken.isChecked()) bbqChicken.setEnabled(true);
-        if (!beef.isChecked()) beef.setEnabled(true);
-        if (!ham.isChecked()) ham.setEnabled(true);
-        if (!provolone.isChecked()) provolone.setEnabled(true);
-        if (!cheddar.isChecked()) cheddar.setEnabled(true);
-        if (!olives.isChecked()) olives.setEnabled(true);
-        if (!spinach.isChecked()) spinach.setEnabled(true);
-        if (!pineapple.isChecked()) pineapple.setEnabled(true);
-        if (!bacon.isChecked()) bacon.setEnabled(true);
+    private void onToppingSelected(int count) {
+        selectedToppingsCount = count;
+        updatePizzaPrice();
     }
 
     private void updatePizzaPrice() {
-        double price = 0.0;
-
-        if (sSize.isChecked()) {
-            price += getSelectedPizzaBasePrice(DELUXE_S_PRICE, BBQ_S_PRICE, MEATZZA_S_PRICE, BYO_S_PRICE);
-        } else if (mSize.isChecked()) {
-            price += getSelectedPizzaBasePrice(DELUXE_M_PRICE, BBQ_M_PRICE, MEATZZA_M_PRICE, BYO_M_PRICE);
-        } else if (lSize.isChecked()) {
-            price += getSelectedPizzaBasePrice(DELUXE_L_PRICE, BBQ_L_PRICE, MEATZZA_L_PRICE, BYO_L_PRICE);
-        }
-
-        // Add topping costs if the pizza is customizable
+        double price = calculateBasePrice();
         if (isCustomizable) {
             price += selectedToppingsCount * TOPPING_PRICE;
         }
-
-        pizzaPrice.setText("Price: $" + String.format("%.2f", price));
+        pizzaPrice.setText(String.format("Price: $%.2f", price));
     }
 
-    private double getSelectedPizzaBasePrice(double deluxePrice, double bbqPrice, double meatzzaPrice, double byoPrice) {
-        String selectedType = chooseType.getSelectedItem().toString();
-        switch (selectedType) {
-            case "Deluxe":
-                return deluxePrice;
-            case "BBQ Chicken":
-                return bbqPrice;
-            case "Meatzza":
-                return meatzzaPrice;
-            case "Build Your Own":
-                return byoPrice;
-            default:
-                return 0.0;
-        }
+    private double calculateBasePrice() {
+        if (sSize.isChecked()) return 16.99; // Example price
+        if (mSize.isChecked()) return 18.99; // Example price
+        if (lSize.isChecked()) return 20.99; // Example price
+        return 0.0;
     }
 
     private void addOrder() {
-        String selectedType = chooseType.getSelectedItem().toString();
-        Size pizzaSize = getPizzaSize();
-        List<Topping> selectedToppings = getSelectedToppings();
-
-        Pizza pizza = null;
-
-        // Create the pizza based on the selected type
-        switch (selectedType) {
-            case "Deluxe":
-                pizza = pizzaFactory.createDeluxe();
-                break;
-            case "BBQ Chicken":
-                pizza = pizzaFactory.createBBQChicken();
-                break;
-            case "Meatzza":
-                pizza = pizzaFactory.createMeatzza();
-                break;
-            case "Build Your Own":
-                pizza = pizzaFactory.createBuildYourOwn();
-                break;
-        }
-
-        // Set the pizza size and toppings
-        if (pizza != null) {
-            pizza.setSize(pizzaSize);
-            pizza.setToppings(selectedToppings);
-        }
-
-        // Save the order using OrderManager
-        try {
-            OrderManager.getInstance().addOrderToCurrentOrder(pizza);
-
-            // Retrieve the current order number
-            int orderNumber = OrderManager.getInstance().getCurrentOrderNumber();
-
-            // Show a confirmation message with the order number
-            Toast.makeText(ChicagoPizzaActivity.this, "Order #" + orderNumber + " added to your cart", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Toast.makeText(this, "Failed to add pizza to order: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.e("ChicagoPizzaActivity", "Error adding order", e);
-        }
-    }
-
-
-    private Size getPizzaSize() {
-        if (sSize.isChecked()) {
-            return Size.SMALL;
-        } else if (mSize.isChecked()) {
-            return Size.MEDIUM;
-        } else if (lSize.isChecked()) {
-            return Size.LARGE;
-        } else {
-            return Size.SMALL;  // Default fallback
-        }
-    }
-
-    private List<Topping> getSelectedToppings() {
-        List<Topping> toppings = new ArrayList<>();
-        if (sausage.isChecked()) toppings.add(Topping.SAUSAGE);
-        if (pepperoni.isChecked()) toppings.add(Topping.PEPPERONI);
-        if (greenPepper.isChecked()) toppings.add(Topping.GREEN_PEPPER);
-        if (onion.isChecked()) toppings.add(Topping.ONION);
-        if (mushroom.isChecked()) toppings.add(Topping.MUSHROOM);
-        if (bbqChicken.isChecked()) toppings.add(Topping.BBQ_CHICKEN);
-        if (beef.isChecked()) toppings.add(Topping.BEEF);
-        if (ham.isChecked()) toppings.add(Topping.HAM);
-        if (provolone.isChecked()) toppings.add(Topping.PROVOLONE);
-        if (cheddar.isChecked()) toppings.add(Topping.CHEDDAR);
-        if (olives.isChecked()) toppings.add(Topping.OLIVES);
-        if (spinach.isChecked()) toppings.add(Topping.SPINACH);
-        if (pineapple.isChecked()) toppings.add(Topping.PINEAPPLE);
-        if (bacon.isChecked()) toppings.add(Topping.BACON);
-        return toppings;
+        Toast.makeText(this, "Order added!", Toast.LENGTH_SHORT).show();
     }
 }

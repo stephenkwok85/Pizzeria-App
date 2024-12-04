@@ -9,7 +9,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Chicago Style -->
+        <!-- Chicago Style Title -->
         <TextView
             android:id="@+id/chicagoStyleLabel"
             android:layout_width="wrap_content"
@@ -20,7 +20,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp" />
 
-        <!-- Pic of Pizza -->
+        <!-- Pizza Image -->
         <ImageView
             android:id="@+id/pizzaImage"
             android:layout_width="match_parent"
@@ -29,173 +29,55 @@
             android:scaleType="centerCrop"
             android:layout_marginBottom="16dp" />
 
-        <!-- Choose Type -->
-        <LinearLayout
+        <!-- Pizza Type Spinner -->
+        <Spinner
+            android:id="@+id/chooseTypeSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
-
-            <TextView
-                android:id="@+id/chooseTypeLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Type"
-                android:textSize="16sp" />
-
-            <Spinner
-                android:id="@+id/chooseTypeSpinner"
-                android:layout_width="141dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp" />
-
-            <TextView
-                android:id="@+id/crustLabel2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Crust:" />
-
-            <TextView
-                android:id="@+id/crustTypeView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="Crust Type" />
-
-        </LinearLayout>
-
-        <!-- Size -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
-
-            <TextView
-                android:id="@+id/sizeLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Size"
-                android:textSize="16sp" />
-
-            <RadioGroup
-                android:id="@+id/sizeRadioGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginStart="16dp">
-
-                <RadioButton
-                    android:id="@+id/sizeSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="S" />
-
-                <RadioButton
-                    android:id="@+id/sizeMedium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="M" />
-
-                <RadioButton
-                    android:id="@+id/sizeLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="L" />
-            </RadioGroup>
-        </LinearLayout>
-
-        <!-- Select Toppings -->
-        <TextView
-            android:id="@+id/selectToppingsLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Select Toppings"
-            android:textSize="16sp"
             android:layout_marginBottom="8dp" />
 
-        <GridLayout
-            android:id="@+id/toppingsGrid"
+        <!-- Crust Type -->
+        <TextView
+            android:id="@+id/crustTypeView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Crust Type: Default"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Size Selection -->
+        <RadioGroup
+            android:id="@+id/sizeRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="3"
+            android:orientation="horizontal"
             android:layout_marginBottom="16dp">
 
-            <!-- Topping List -->
-            <CheckBox
-                android:id="@+id/toppingSausage"
+            <RadioButton
+                android:id="@+id/sizeSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SAUSAGE" />
-            <CheckBox
-                android:id="@+id/toppingPepperoni"
+                android:text="Small" />
+
+            <RadioButton
+                android:id="@+id/sizeMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="PEPPERONI" />
-            <CheckBox
-                android:id="@+id/toppingGreenPepper"
+                android:text="Medium" />
+
+            <RadioButton
+                android:id="@+id/sizeLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="GREEN_PEPPER" />
-            <CheckBox
-                android:id="@+id/toppingOnion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ONION" />
-            <CheckBox
-                android:id="@+id/toppingMushroom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MUSHROOM" />
-            <CheckBox
-                android:id="@+id/toppingBBQChicken"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="BBQ_CHICKEN" />
-            <CheckBox
-                android:id="@+id/toppingBeef"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="BEEF" />
-            <CheckBox
-                android:id="@+id/toppingHam"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="HAM" />
-            <CheckBox
-                android:id="@+id/toppingProvolone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PROVOLONE" />
-            <CheckBox
-                android:id="@+id/toppingCheddar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="CHEDDAR" />
-            <CheckBox
-                android:id="@+id/toppingOlives"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OLIVES" />
-            <CheckBox
-                android:id="@+id/toppingSpinach"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="SPINACH" />
-            <CheckBox
-                android:id="@+id/toppingPineapple"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="PINEAPPLE" />
-            <CheckBox
-                android:id="@+id/toppingBacon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="BACON" />
-        </GridLayout>
+                android:text="Large" />
+        </RadioGroup>
+
+        <!-- Toppings RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/toppingsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
 
         <!-- Pizza Price and Add to Order -->
         <LinearLayout
@@ -226,6 +108,5 @@
                 android:text="Add to Order"
                 android:layout_marginStart="16dp" />
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>
