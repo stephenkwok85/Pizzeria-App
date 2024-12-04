@@ -70,36 +70,54 @@ public class CurrentOrderActivity extends AppCompatActivity {
     }
 
     private void searchOrder() {
-        try {
-            int orderNumber = Integer.parseInt(orderNumberInput.getText().toString());
-            List<Pizza> pizzas = OrderManager.getInstance().getOrder(orderNumber);
+        String orderNumberText = orderNumberInput.getText().toString();
+        if (!orderNumberText.isEmpty()) {
+            try {
+                int orderNumber = Integer.parseInt(orderNumberText);
+                List<Pizza> pizzasInOrder = OrderManager.getInstance().getOrder(orderNumber);
 
-            if (pizzas != null && !pizzas.isEmpty()) {
-                currentOrderPizzas.clear();
-                currentOrderPizzas.addAll(pizzas);
-                updateListView();
-                updateOrderSummary();
-            } else {
-                Toast.makeText(this, "Order not found or already completed!", Toast.LENGTH_SHORT).show();
+                if (pizzasInOrder != null) {
+                    // Display pizzas in ListView
+                    currentOrderPizzas.clear();
+                    currentOrderPizzas.addAll(pizzasInOrder);
+                    updateListView(); // Update ListView to reflect the pizzas in the order
+
+                    updateOrderSummary(); // Update the order summary
+                } else {
+                    Toast.makeText(this, "Order not found or already completed.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Invalid order number!", Toast.LENGTH_SHORT).show();
             }
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Invalid order number!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Please enter an order number.", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void removeSelectedPizza() {
         if (selectedPizzaIndex >= 0 && selectedPizzaIndex < currentOrderPizzas.size()) {
-            // Remove the selected pizza
-            currentOrderPizzas.remove(selectedPizzaIndex);
+            Pizza selectedPizza = currentOrderPizzas.get(selectedPizzaIndex);
 
-            // Update ListView and summary
-            updateListView();
-            updateOrderSummary();
+            try {
+                int orderNumber = Integer.parseInt(orderNumberInput.getText().toString());
+                OrderManager.getInstance().removePizzaFromOrder(orderNumber, selectedPizza);
 
-            // Reset the selected index
-            selectedPizzaIndex = -1;
+                // Remove pizza from the current list
+                currentOrderPizzas.remove(selectedPizzaIndex);
 
-            Toast.makeText(this, "Selected pizza removed.", Toast.LENGTH_SHORT).show();
+                // Update ListView and summary
+                updateListView();
+                updateOrderSummary();
+
+                // Reset the selected index
+                selectedPizzaIndex = -1;
+
+                Toast.makeText(this, "Selected pizza removed.", Toast.LENGTH_SHORT).show();
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Invalid order number!", Toast.LENGTH_SHORT).show();
+            } catch (IllegalArgumentException e) {
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(this, "Please select a pizza to remove.", Toast.LENGTH_SHORT).show();
         }
