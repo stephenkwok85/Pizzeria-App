@@ -38,14 +38,23 @@
 
         <!-- Crust Type -->
         <TextView
+            android:id="@+id/crustTypeView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Crust Type:"
+            android:textSize="16sp" />
+
+        <TextView
             android:id="@+id/crustTypeView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Crust Type: Default"
+            android:text=" "
             android:textSize="16sp"
             android:layout_marginBottom="16dp" />
 
         <!-- Size Selection -->
+
         <RadioGroup
             android:id="@+id/sizeRadioGroup"
             android:layout_width="match_parent"
