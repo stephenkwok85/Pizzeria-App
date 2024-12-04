@@ -17,11 +17,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import pizzeria_package.NYPizza;
+import pizzeria_package.Pizza;
 import pizzeria_package.PizzaFactory;
+import pizzeria_package.Size;
 import pizzeria_package.Topping;
 
 public class NYPizzaActivity extends AppCompatActivity {
@@ -179,6 +182,49 @@ public class NYPizzaActivity extends AppCompatActivity {
     }
 
     private void addOrder() {
-        Toast.makeText(this, "Order added!", Toast.LENGTH_SHORT).show();
+        String selectedType = (String) chooseType.getSelectedItem();
+        Pizza pizza;
+        Size pizzaSize = getPizzaSize();
+
+        switch (selectedType) {
+            case "Deluxe":
+                pizza = pizzaFactory.createDeluxe();
+                break;
+            case "Meatzza":
+                pizza = pizzaFactory.createMeatzza();
+                break;
+            case "BBQ Chicken":
+                pizza = pizzaFactory.createBBQChicken();
+                break;
+            case "Build Your Own":
+            default:
+                pizza = pizzaFactory.createBuildYourOwn();
+                List<Topping> selectedToppings = new ArrayList<>(toppingAdapter.getSelectedToppings());
+                pizza.setToppings(selectedToppings);
+                break;
+        }
+
+        // Set the size
+        if (pizza != null) {
+            pizza.setSize(pizzaSize);
+        }
+
+        // Add pizza to the current order
+        OrderManager.getInstance().addOrderToCurrentOrder(pizza);
+        int orderNumber = OrderManager.getInstance().getCurrentOrderNumber();
+
+        Toast.makeText(this, "Pizza added to order number: " + orderNumber, Toast.LENGTH_SHORT).show();
+    }
+
+    private Size getPizzaSize() {
+        if (sSize.isChecked()) {
+            return Size.SMALL;
+        } else if (mSize.isChecked()) {
+            return Size.MEDIUM;
+        } else if (lSize.isChecked()) {
+            return Size.LARGE;
+        } else {
+            return Size.SMALL;  // Default fallback
+        }
     }
 }
