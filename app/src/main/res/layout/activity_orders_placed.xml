@@ -20,26 +20,29 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Order Number Label -->
+
+    <!-- Order Number Dropdown -->
+
+    <!-- Placed Order Table -->
     <TextView
         android:id="@+id/orderNumberLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:text="Order Number"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/placedOrderTitle"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintTop_toBottomOf="@id/placedOrderTitle" />
 
-    <!-- Order Number Dropdown -->
     <Spinner
         android:id="@+id/placedOrderNumberDropdown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/placedOrderTitle"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintStart_toEndOf="@id/orderNumberLabel"
-        android:layout_marginStart="8dp" />
+        app:layout_constraintTop_toBottomOf="@id/placedOrderTitle" />
 
-    <!-- Placed Order Table -->
     <ListView
         android:id="@+id/placedOrderList"
         android:layout_width="361dp"

@@ -131,4 +131,13 @@ public class OrderManager {
         }
         return placedOrderNumbers;
     }
+
+    public List<Pizza> getPlacedOrder(int orderNumber) {
+        Order order = orders.get(orderNumber);
+        if (order != null && order.isPlaced()) {
+            return order.getPizzas();
+        }
+        return null;
+    }
+
 }
