@@ -52,19 +52,22 @@
         android:layout_marginStart="16dp" />
 
     <!-- Current Order List -->
+
+    <!-- Subtotal and Tax Row -->
+
     <ListView
         android:id="@+id/currentOrderList"
         android:layout_width="match_parent"
         android:layout_height="400dp"
+        android:choiceMode="singleChoice"
         android:divider="#CCCCCC"
         android:dividerHeight="1dp"
-        android:choiceMode="singleChoice"
-        app:layout_constraintTop_toBottomOf="@id/orderNumberLabel"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/totalLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/totalLayout" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/orderNumberLabel" />
 
-    <!-- Subtotal and Tax Row -->
     <LinearLayout
         android:id="@+id/totalLayout"
         android:layout_width="match_parent"
@@ -129,7 +132,7 @@
             android:id="@+id/clearAllOrdersButton"
             android:layout_width="125dp"
             android:layout_height="wrap_content"
-            android:text="Clear All Orders" />
+            android:text="Clear All Pizzas" />
     </LinearLayout>
 
     <!-- Order Total and Complete Order Row -->
