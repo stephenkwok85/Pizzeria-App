@@ -45,8 +45,6 @@ public class OrderManager {
         }
     }
 
-
-
     /**
      * Adds a pizza to the current order. Creates a new order if no current order exists.
      *
