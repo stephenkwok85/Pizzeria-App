@@ -16,11 +16,14 @@ import pizzeria_package.Pizza;
  */
 public class OrderManager {
 
+    private static final int NO_ACTIVE_ORDER = 0;
+    private static final int INITIAL_ORDER_NUMBER = 1;
+
     private static OrderManager instance;
     private final Map<Integer, Order> orders = new HashMap<>();
-    private int nextOrderNumber = 1;
-    private int currentOrderNumber = 0;
-    private int lastCreatedOrderNumber = 0;
+    private int nextOrderNumber = INITIAL_ORDER_NUMBER;
+    private int currentOrderNumber = NO_ACTIVE_ORDER;
+    private int lastCreatedOrderNumber = NO_ACTIVE_ORDER;
 
     private OrderManager() {}
 
@@ -52,7 +55,7 @@ public class OrderManager {
         }
 
         if (orderNumber == currentOrderNumber) {
-            currentOrderNumber = 0;
+            currentOrderNumber = NO_ACTIVE_ORDER;
         }
     }
 
@@ -62,7 +65,7 @@ public class OrderManager {
      * @param pizza The pizza to be added to the current order.
      */
     public void addOrderToCurrentOrder(Pizza pizza) {
-        if (currentOrderNumber == 0) {
+        if (currentOrderNumber == NO_ACTIVE_ORDER) {
             currentOrderNumber = nextOrderNumber++;
             lastCreatedOrderNumber = currentOrderNumber;
             orders.put(currentOrderNumber, new Order());
@@ -155,12 +158,12 @@ public class OrderManager {
      */
     public void clearAllOrders() {
         orders.clear();
-        currentOrderNumber = 0;
+        currentOrderNumber = NO_ACTIVE_ORDER;
 
-        if (lastCreatedOrderNumber != 0 && currentOrderNumber == 0) {
+        if (lastCreatedOrderNumber != NO_ACTIVE_ORDER && currentOrderNumber == NO_ACTIVE_ORDER) {
             nextOrderNumber = lastCreatedOrderNumber;
         } else {
-            nextOrderNumber = 1;
+            nextOrderNumber = INITIAL_ORDER_NUMBER;
         }
     }
 

@@ -34,10 +34,29 @@ import pizzeria_package.Topping;
  * @author Stephen Kwok and Jeongtae Kim
  */
 public class NYPizzaActivity extends AppCompatActivity {
-
     private static final double TOPPING_PRICE = 1.69;
     private static final int MAX_TOPPINGS = 7;
 
+    private static final double DELUXE_SMALL_PRICE = 16.99;
+    private static final double DELUXE_MEDIUM_PRICE = 18.99;
+    private static final double DELUXE_LARGE_PRICE = 20.99;
+
+    private static final double BBQ_SMALL_PRICE = 15.99;
+    private static final double BBQ_MEDIUM_PRICE = 17.99;
+    private static final double BBQ_LARGE_PRICE = 19.99;
+
+    private static final double MEATZZA_SMALL_PRICE = 17.99;
+    private static final double MEATZZA_MEDIUM_PRICE = 19.99;
+    private static final double MEATZZA_LARGE_PRICE = 21.99;
+
+    private static final double BUILD_YOUR_OWN_SMALL_PRICE = 9.99;
+    private static final double BUILD_YOUR_OWN_MEDIUM_PRICE = 11.99;
+    private static final double BUILD_YOUR_OWN_LARGE_PRICE = 13.99;
+
+    private static final String TYPE_DELUXE = "Deluxe";
+    private static final String TYPE_BBQ_CHICKEN = "BBQ Chicken";
+    private static final String TYPE_MEATZZA = "Meatzza";
+    private static final String TYPE_BUILD_YOUR_OWN = "Build Your Own";
     private Spinner chooseType;
     private TextView crustField;
     private RadioButton sSize, mSize, lSize;
@@ -215,25 +234,25 @@ public class NYPizzaActivity extends AppCompatActivity {
         double basePrice = 0.0;
 
         switch (selectedType) {
-            case "Deluxe":
-                if (sSize.isChecked()) basePrice = 16.99;
-                else if (mSize.isChecked()) basePrice = 18.99;
-                else if (lSize.isChecked()) basePrice = 20.99;
+            case TYPE_DELUXE:
+                if (sSize.isChecked()) basePrice = DELUXE_SMALL_PRICE;
+                else if (mSize.isChecked()) basePrice = DELUXE_MEDIUM_PRICE;
+                else if (lSize.isChecked()) basePrice = DELUXE_LARGE_PRICE;
                 break;
-            case "BBQ Chicken":
-                if (sSize.isChecked()) basePrice = 15.99;
-                else if (mSize.isChecked()) basePrice = 17.99;
-                else if (lSize.isChecked()) basePrice = 19.99;
+            case TYPE_BBQ_CHICKEN:
+                if (sSize.isChecked()) basePrice = BBQ_SMALL_PRICE;
+                else if (mSize.isChecked()) basePrice = BBQ_MEDIUM_PRICE;
+                else if (lSize.isChecked()) basePrice = BBQ_LARGE_PRICE;
                 break;
-            case "Meatzza":
-                if (sSize.isChecked()) basePrice = 17.99;
-                else if (mSize.isChecked()) basePrice = 19.99;
-                else if (lSize.isChecked()) basePrice = 21.99;
+            case TYPE_MEATZZA:
+                if (sSize.isChecked()) basePrice = MEATZZA_SMALL_PRICE;
+                else if (mSize.isChecked()) basePrice = MEATZZA_MEDIUM_PRICE;
+                else if (lSize.isChecked()) basePrice = MEATZZA_LARGE_PRICE;
                 break;
-            case "Build Your Own":
-                if (sSize.isChecked()) basePrice = 9.99;
-                else if (mSize.isChecked()) basePrice = 11.99;
-                else if (lSize.isChecked()) basePrice = 13.99;
+            case TYPE_BUILD_YOUR_OWN:
+                if (sSize.isChecked()) basePrice = BUILD_YOUR_OWN_SMALL_PRICE;
+                else if (mSize.isChecked()) basePrice = BUILD_YOUR_OWN_MEDIUM_PRICE;
+                else if (lSize.isChecked()) basePrice = BUILD_YOUR_OWN_LARGE_PRICE;
                 break;
         }
 
