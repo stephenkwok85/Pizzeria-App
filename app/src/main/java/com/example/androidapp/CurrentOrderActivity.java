@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import pizzeria_package.Order;
 import pizzeria_package.Pizza;
 import pizzeria_package.Topping;
 
@@ -116,7 +115,7 @@ public class CurrentOrderActivity extends AppCompatActivity {
                             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
-                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss()) // Dismiss if No is clicked
+                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss()) 
                     .setCancelable(true) 
                     .show();
         } else {
@@ -168,7 +167,7 @@ public class CurrentOrderActivity extends AppCompatActivity {
                         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton("No", (dialog, which) -> dialog.dismiss()) // Dismiss if No is clicked
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .setCancelable(true)
                 .show();
     }
