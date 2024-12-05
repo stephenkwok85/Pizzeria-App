@@ -20,7 +20,7 @@ import pizzeria_package.*;
 /**
  * Activity to manage placed orders. 
  * Allows users to view order details, cancel orders, and export order information to a text file.
- * 
+ *
  * @author Stephen Kwok and Jeongtae Kim
  */
 public class OrdersPlacedActivity extends AppCompatActivity {
@@ -168,7 +168,8 @@ public class OrdersPlacedActivity extends AppCompatActivity {
                             listAdapter.notifyDataSetChanged();
                             orderTotalField.setText("");
 
-                            OrderManager.getInstance().reuseCanceledOrderNumber(orderNumber);
+                            // Remove the following line
+                            // OrderManager.getInstance().reuseCanceledOrderNumber(orderNumber);
                         } else {
                             Toast.makeText(this, "Failed to cancel order #" + orderNumber, Toast.LENGTH_SHORT).show();
                         }
@@ -182,6 +183,7 @@ public class OrdersPlacedActivity extends AppCompatActivity {
             Toast.makeText(this, "Please select an order to cancel.", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     /**
      * Exports the order details to a text file (functionality not implemented).

@@ -11,7 +11,7 @@ import pizzeria_package.Pizza;
 /**
  * Singleton class to manage orders in the application.
  * Handles adding pizzas to orders, retrieving orders, completing orders, and managing order numbers.
- * 
+ *
  * @author Stephen Kwok and Jeongtae Kim
  */
 public class OrderManager {
@@ -67,11 +67,11 @@ public class OrderManager {
     public void addOrderToCurrentOrder(Pizza pizza) {
         if (currentOrderNumber == NO_ACTIVE_ORDER) {
             currentOrderNumber = nextOrderNumber++;
-            lastCreatedOrderNumber = currentOrderNumber;
             orders.put(currentOrderNumber, new Order());
         }
         orders.get(currentOrderNumber).addPizza(pizza);
     }
+
 
     /**
      * Retrieves the current active order number.
@@ -102,11 +102,11 @@ public class OrderManager {
     public boolean deletePlacedOrder(int orderNumber) {
         if (orders.containsKey(orderNumber) && orders.get(orderNumber).isPlaced()) {
             orders.remove(orderNumber);
-            reuseCanceledOrderNumber(orderNumber);
             return true;
         }
         return false;
     }
+
 
     /**
      * Retrieves a list of order numbers for all placed orders.
@@ -167,10 +167,4 @@ public class OrderManager {
         }
     }
 
-    /**
-     * Sets the next order number to a specific value (used when canceling an order).
-     */
-    public void reuseCanceledOrderNumber(int canceledOrderNumber) {
-        this.nextOrderNumber = canceledOrderNumber;
-    }
 }
