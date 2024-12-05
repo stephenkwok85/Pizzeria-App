@@ -64,7 +64,6 @@ public class NYPizzaActivity extends AppCompatActivity {
         setupListeners();
     }
 
-
     private void initializeViews() {
         chooseType = findViewById(R.id.chooseTypeSpinner);
         crustField = findViewById(R.id.NYCrustTypeView);
@@ -158,9 +157,7 @@ public class NYPizzaActivity extends AppCompatActivity {
         pizzaImage.setImageResource(imageResource);
         updatePizzaPrice();
     }
-
-
-
+    
     private void onToppingSelected(int count) {
         selectedToppingsCount = count;
         updatePizzaPrice();
@@ -175,9 +172,9 @@ public class NYPizzaActivity extends AppCompatActivity {
     }
 
     private double calculateBasePrice() {
-        if (sSize.isChecked()) return 15.99; // Example base price for Small
-        if (mSize.isChecked()) return 17.99; // Example base price for Medium
-        if (lSize.isChecked()) return 19.99; // Example base price for Large
+        if (sSize.isChecked()) return 15.99; 
+        if (mSize.isChecked()) return 17.99; 
+        if (lSize.isChecked()) return 19.99; 
         return 0.0;
     }
 
@@ -204,12 +201,10 @@ public class NYPizzaActivity extends AppCompatActivity {
                 break;
         }
 
-        // Set the size
         if (pizza != null) {
             pizza.setSize(pizzaSize);
         }
 
-        // Add pizza to the current order
         OrderManager.getInstance().addOrderToCurrentOrder(pizza);
         int orderNumber = OrderManager.getInstance().getCurrentOrderNumber();
 
@@ -224,7 +219,7 @@ public class NYPizzaActivity extends AppCompatActivity {
         } else if (lSize.isChecked()) {
             return Size.LARGE;
         } else {
-            return Size.SMALL;  // Default fallback
+            return Size.SMALL; 
         }
     }
 }
