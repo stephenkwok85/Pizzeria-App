@@ -76,21 +76,16 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
     public void onBindViewHolder(@NonNull ToppingViewHolder holder, int position) {
         Topping topping = toppings.get(position);
 
-        // Bind topping data
         holder.toppingName.setText(topping.toString());
         holder.toppingImage.setImageResource(topping.getImageResourceId());
 
-        // Remove any existing listener to avoid duplicate triggers
         holder.toppingCheckBox.setOnCheckedChangeListener(null);
 
-        // Set checkbox state
         boolean isSelected = selectedToppings.contains(topping);
         holder.toppingCheckBox.setChecked(isSelected);
 
-        // Enable or disable the checkbox based on selection rules
         holder.toppingCheckBox.setEnabled(isEditable && (isSelected || selectedToppings.size() < maxToppings));
 
-        // Add the listener again after setting the state
         holder.toppingCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isEditable) {
                 if (isChecked) {
@@ -122,17 +117,6 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
      */
     public void resetSelection() {
         selectedToppings.clear();
-        notifyDataSetChanged();
-    }
-
-    /**
-     * Preselects specific toppings.
-     *
-     * @param preselectedToppings The toppings to preselect.
-     */
-    public void preselectToppings(Topping... preselectedToppings) {
-        selectedToppings.clear();
-        selectedToppings.addAll(Arrays.asList(preselectedToppings));
         notifyDataSetChanged();
     }
 
