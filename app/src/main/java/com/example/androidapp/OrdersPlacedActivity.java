@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,10 +18,13 @@ import java.util.List;
 import pizzeria_package.*;
 
 /**
- * Activity to manage placed orders. Allows users to view order details,
- * cancel orders, and export order information to a text file.
+ * Activity to manage placed orders. 
+ * Allows users to view order details, cancel orders, and export order information to a text file.
+ * 
+ * @author Stephen Kwok and Jeongtae Kim
  */
 public class OrdersPlacedActivity extends AppCompatActivity {
+
     private Spinner placedOrderNumberDropdown;
     private ListView placedOrderList;
     private EditText orderTotalField;
@@ -35,6 +37,9 @@ public class OrdersPlacedActivity extends AppCompatActivity {
     private List<String> pizzaDetailsList = new ArrayList<>();
     private List<Integer> placedOrderNumbers = new ArrayList<>();
 
+    /**
+     * Initializes the activity and sets up the user interface.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,12 +76,18 @@ public class OrdersPlacedActivity extends AppCompatActivity {
         refreshPlacedOrders();
     }
 
+    /**
+     * Refreshes the list of placed orders and updates the spinner.
+     */
     private void refreshPlacedOrders() {
         placedOrderNumbers.clear();
         placedOrderNumbers.addAll(OrderManager.getInstance().getPlacedOrderNumbers());
         spinnerAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Displays the details of the selected order.
+     */
     private void showOrderDetails() {
         Integer orderNumber = (Integer) placedOrderNumberDropdown.getSelectedItem();
         if (orderNumber != null) {
@@ -90,6 +101,9 @@ public class OrdersPlacedActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Displays the details of the pizzas in the order.
+     */
     private void displayPizzaDetails(List<Pizza> pizzas) {
         pizzaDetailsList.clear();
         int pizzaNumber = 1;
@@ -108,6 +122,9 @@ public class OrdersPlacedActivity extends AppCompatActivity {
         listAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Returns a string representation of the pizza toppings.
+     */
     private String getToppingsString(Pizza pizza) {
         StringBuilder toppings = new StringBuilder();
         for (Topping topping : pizza.getToppings()) {
@@ -119,6 +136,9 @@ public class OrdersPlacedActivity extends AppCompatActivity {
         return toppings.toString();
     }
 
+    /**
+     * Calculates the total price of the order including tax.
+     */
     private void calculateAndDisplayTotal(List<Pizza> pizzas) {
         double subtotal = 0.0;
         for (Pizza pizza : pizzas) {
@@ -130,13 +150,15 @@ public class OrdersPlacedActivity extends AppCompatActivity {
         orderTotalField.setText(String.format("%.2f", total));
     }
 
+    /**
+     * Cancels the selected order after confirming with the user.
+     */
     private void cancelOrder() {
         Integer orderNumber = (Integer) placedOrderNumberDropdown.getSelectedItem();
         if (orderNumber != null) {
-            // Create the AlertDialog
             new android.app.AlertDialog.Builder(this)
                     .setMessage("Are you sure you want to cancel order #" + orderNumber + "?")
-                    .setCancelable(false) 
+                    .setCancelable(false)
                     .setPositiveButton("Yes", (dialog, id) -> {
                         boolean isDeleted = OrderManager.getInstance().deletePlacedOrder(orderNumber);
                         if (isDeleted) {
@@ -161,6 +183,9 @@ public class OrdersPlacedActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Exports the order details to a text file (functionality not implemented).
+     */
     private void exportOrders() {
         Toast.makeText(this, "Export functionality does not need to be implemented.", Toast.LENGTH_SHORT).show();
     }
