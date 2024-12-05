@@ -28,9 +28,9 @@ import pizzeria_package.Size;
 import pizzeria_package.Topping;
 
 /**
- * Activity to handle NY Pizza ordering. 
+ * Activity to handle NY Pizza ordering.
  * Includes functionality for selecting pizza type, size, toppings, and adding pizzas to the order.
- * 
+ *
  * @author Stephen Kwok and Jeongtae Kim
  */
 public class NYPizzaActivity extends AppCompatActivity {
@@ -66,9 +66,9 @@ public class NYPizzaActivity extends AppCompatActivity {
         initializeViews();
         setupRecyclerView();
         setupSpinner();
-        chooseType.setSelection(3); 
+        chooseType.setSelection(3);
         setPizzaOptions("Build Your Own");
-        sSize.setChecked(true); 
+        sSize.setChecked(true);
         setupListeners();
     }
 
@@ -201,8 +201,9 @@ public class NYPizzaActivity extends AppCompatActivity {
         if (isCustomizable) {
             price += selectedToppingsCount * TOPPING_PRICE;
         }
-        pizzaPrice.setText(String.format("%.2f", price));
+        pizzaPrice.setText(String.format("Price: $%.2f", price));
     }
+
 
     /**
      * Calculates the base price of the pizza based on the selected size.
@@ -210,11 +211,35 @@ public class NYPizzaActivity extends AppCompatActivity {
      * @return The base price of the pizza.
      */
     private double calculateBasePrice() {
-        if (sSize.isChecked()) return 15.99;
-        if (mSize.isChecked()) return 17.99;
-        if (lSize.isChecked()) return 19.99;
-        return 0.0;
+        String selectedType = chooseType.getSelectedItem().toString();
+        double basePrice = 0.0;
+
+        switch (selectedType) {
+            case "Deluxe":
+                if (sSize.isChecked()) basePrice = 16.99;
+                else if (mSize.isChecked()) basePrice = 18.99;
+                else if (lSize.isChecked()) basePrice = 20.99;
+                break;
+            case "BBQ Chicken":
+                if (sSize.isChecked()) basePrice = 15.99;
+                else if (mSize.isChecked()) basePrice = 17.99;
+                else if (lSize.isChecked()) basePrice = 19.99;
+                break;
+            case "Meatzza":
+                if (sSize.isChecked()) basePrice = 17.99;
+                else if (mSize.isChecked()) basePrice = 19.99;
+                else if (lSize.isChecked()) basePrice = 21.99;
+                break;
+            case "Build Your Own":
+                if (sSize.isChecked()) basePrice = 9.99;
+                else if (mSize.isChecked()) basePrice = 11.99;
+                else if (lSize.isChecked()) basePrice = 13.99;
+                break;
+        }
+
+        return basePrice;
     }
+
 
     /**
      * Adds the current pizza to the order, including the selected toppings and size.

@@ -29,13 +29,13 @@ import pizzeria_package.Pizza;
 
 /**
  * ChicagoPizzaActivity handles the user interface and logic for creating and customizing a Chicago-style pizza.
- * It allows users to select the pizza type (e.g., Deluxe, BBQ Chicken, Meatzza, Build Your Own), choose toppings, 
- * and set the size of the pizza. The activity calculates the price based on the selected options and allows the 
+ * It allows users to select the pizza type (e.g., Deluxe, BBQ Chicken, Meatzza, Build Your Own), choose toppings,
+ * and set the size of the pizza. The activity calculates the price based on the selected options and allows the
  * user to add the pizza to their current order.
  *
  * @author Stephen Kwok and Jeongtae Kim
  */
- public class ChicagoPizzaActivity extends AppCompatActivity {
+public class ChicagoPizzaActivity extends AppCompatActivity {
     private static final double TOPPING_PRICE = 1.69;
     private static final int MAX_TOPPINGS = 7;
 
@@ -205,11 +205,35 @@ import pizzeria_package.Pizza;
      * @return The base price of the pizza.
      */
     private double calculateBasePrice() {
-        if (sSize.isChecked()) return 15.99;
-        if (mSize.isChecked()) return 17.99;
-        if (lSize.isChecked()) return 19.99;
-        return 0.0;
+        String selectedType = chooseType.getSelectedItem().toString();
+        double basePrice = 0.0;
+
+        switch (selectedType) {
+            case "Deluxe":
+                if (sSize.isChecked()) basePrice = 16.99;
+                else if (mSize.isChecked()) basePrice = 18.99;
+                else if (lSize.isChecked()) basePrice = 20.99;
+                break;
+            case "BBQ Chicken":
+                if (sSize.isChecked()) basePrice = 14.99;
+                else if (mSize.isChecked()) basePrice = 16.99;
+                else if (lSize.isChecked()) basePrice = 19.99;
+                break;
+            case "Meatzza":
+                if (sSize.isChecked()) basePrice = 17.99;
+                else if (mSize.isChecked()) basePrice = 19.99;
+                else if (lSize.isChecked()) basePrice = 21.99;
+                break;
+            case "Build Your Own":
+                if (sSize.isChecked()) basePrice = 8.99;
+                else if (mSize.isChecked()) basePrice = 10.99;
+                else if (lSize.isChecked()) basePrice = 12.99;
+                break;
+        }
+
+        return basePrice;
     }
+
 
     /**
      * Handles the topping selection and updates the number of selected toppings.
