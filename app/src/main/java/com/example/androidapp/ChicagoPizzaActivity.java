@@ -51,20 +51,16 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chicago_pizza);
 
-        // Initialize views
         initializeViews();
 
-        // Set up RecyclerView for toppings
         setupRecyclerView();
 
-        // Set up Spinner for pizza type
         setupSpinner();
 
         chooseType.setSelection(3);
         setPizzaOptions("Build Your Own");
         sSize.setChecked(true);
 
-        // Set up listeners
         setupListeners();
     }
 
@@ -179,9 +175,9 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
     }
 
     private double calculateBasePrice() {
-        if (sSize.isChecked()) return 15.99; // Example base price for Small
-        if (mSize.isChecked()) return 17.99; // Example base price for Medium
-        if (lSize.isChecked()) return 19.99; // Example base price for Large
+        if (sSize.isChecked()) return 15.99;
+        if (mSize.isChecked()) return 17.99;
+        if (lSize.isChecked()) return 19.99;
         return 0.0;
     }
 
@@ -208,17 +204,15 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
                 break;
         }
 
-        // Set the size
         if (pizza != null) {
             pizza.setSize(pizzaSize);
         }
 
-        // Add pizza to the current order
         OrderManager.getInstance().addOrderToCurrentOrder(pizza);
 
         int orderNumber = OrderManager.getInstance().getCurrentOrderNumber();
 
-        Toast.makeText(this, "Pizza added to order number: " + orderNumber, Toast.LENGTH_SHORT).show();    
+        Toast.makeText(this, "Pizza added to order number: " + orderNumber, Toast.LENGTH_SHORT).show();
     }
 
     private Size getPizzaSize() {
@@ -229,7 +223,7 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         } else if (lSize.isChecked()) {
             return Size.LARGE;
         } else {
-            return Size.SMALL;  // Default fallback
+            return Size.SMALL;  
         }
     }
 }
