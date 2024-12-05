@@ -40,14 +40,12 @@ public class OrdersPlacedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders_placed);
 
-        // Initialize views
         placedOrderNumberDropdown = findViewById(R.id.placedOrderNumberDropdown);
         placedOrderList = findViewById(R.id.placedOrderList);
         orderTotalField = findViewById(R.id.orderTotalField);
         cancelOrderButton = findViewById(R.id.cancelOrderButton);
         exportOrderButton = findViewById(R.id.exportOrderButton);
 
-        // Initialize adapters
         spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, placedOrderNumbers);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         placedOrderNumberDropdown.setAdapter(spinnerAdapter);
@@ -55,7 +53,6 @@ public class OrdersPlacedActivity extends AppCompatActivity {
         listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, pizzaDetailsList);
         placedOrderList.setAdapter(listAdapter);
 
-        // Set item selected listener for the Spinner
         placedOrderNumberDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -68,16 +65,11 @@ public class OrdersPlacedActivity extends AppCompatActivity {
             }
         });
 
-        // Set button listeners
         cancelOrderButton.setOnClickListener(v -> cancelOrder());
         exportOrderButton.setOnClickListener(v -> exportOrders());
 
-        // Load placed orders into spinner
         refreshPlacedOrders();
     }
-
-
-
 
     private void refreshPlacedOrders() {
         placedOrderNumbers.clear();
@@ -104,6 +96,7 @@ public class OrdersPlacedActivity extends AppCompatActivity {
 
         for (Pizza pizza : pizzas) {
             pizzaDetailsList.add("Pizza " + pizzaNumber++);
+            pizzaDetailsList.add("Style: " + pizza.getStyle());
             pizzaDetailsList.add("Category: " + pizza.getClass().getSimpleName());
             pizzaDetailsList.add("Size: " + pizza.getSize());
             pizzaDetailsList.add("Crust: " + pizza.getCrust());
@@ -114,7 +107,6 @@ public class OrdersPlacedActivity extends AppCompatActivity {
 
         listAdapter.notifyDataSetChanged();
     }
-
 
     private String getToppingsString(Pizza pizza) {
         StringBuilder toppings = new StringBuilder();
@@ -138,27 +130,38 @@ public class OrdersPlacedActivity extends AppCompatActivity {
         orderTotalField.setText(String.format("%.2f", total));
     }
 
-
     private void cancelOrder() {
         Integer orderNumber = (Integer) placedOrderNumberDropdown.getSelectedItem();
         if (orderNumber != null) {
-            boolean isDeleted = OrderManager.getInstance().deletePlacedOrder(orderNumber);
-            if (isDeleted) {
-                Toast.makeText(this, "Order #" + orderNumber + " has been canceled.", Toast.LENGTH_SHORT).show();
-                refreshPlacedOrders();
-                pizzaDetailsList.clear();
-                listAdapter.notifyDataSetChanged();
-                orderTotalField.setText("");
-            } else {
-                Toast.makeText(this, "Failed to cancel order #" + orderNumber, Toast.LENGTH_SHORT).show();
-            }
+            // Create the AlertDialog
+            new android.app.AlertDialog.Builder(this)
+                    .setMessage("Are you sure you want to cancel order #" + orderNumber + "?")
+                    .setCancelable(false) 
+                    .setPositiveButton("Yes", (dialog, id) -> {
+                        boolean isDeleted = OrderManager.getInstance().deletePlacedOrder(orderNumber);
+                        if (isDeleted) {
+                            Toast.makeText(this, "Order #" + orderNumber + " has been canceled.", Toast.LENGTH_SHORT).show();
+                            refreshPlacedOrders();
+                            pizzaDetailsList.clear();
+                            listAdapter.notifyDataSetChanged();
+                            orderTotalField.setText("");
+
+                            OrderManager.getInstance().reuseCanceledOrderNumber(orderNumber);
+                        } else {
+                            Toast.makeText(this, "Failed to cancel order #" + orderNumber, Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("No", (dialog, id) -> {
+                        dialog.dismiss();
+                    })
+                    .create()
+                    .show();
         } else {
             Toast.makeText(this, "Please select an order to cancel.", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void exportOrders() {
-        // Export functionality (to be implemented later, similar to the initial plan)
-        Toast.makeText(this, "Export functionality is not implemented yet.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Export functionality does not need to be implemented.", Toast.LENGTH_SHORT).show();
     }
 }
