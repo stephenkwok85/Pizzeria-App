@@ -19,6 +19,8 @@ import pizzeria_package.Topping;
 /**
  * Activity to manage the current order view.
  * Provides functionality to search, complete, and clear orders.
+ * 
+ * @author Stephen Kwok and Jeongtae Kim
  */
 public class CurrentOrderActivity extends AppCompatActivity {
     private EditText orderNumberInput;
@@ -48,11 +50,14 @@ public class CurrentOrderActivity extends AppCompatActivity {
         clearAllOrdersButton = findViewById(R.id.clearAllOrdersButton);
         completeOrderButton = findViewById(R.id.completeOrderButton);
 
+        // Set up adapter for displaying order list
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
         currentOrderList.setAdapter(adapter);
 
+        // Set up list view to allow single item selection
         currentOrderList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
+        // Set up item click listener for selecting pizzas in the list
         currentOrderList.setOnItemClickListener((parent, view, position, id) -> {
             selectedPizzaIndex = position;
             Toast.makeText(this, "Selected Pizza: " + (position + 1), Toast.LENGTH_SHORT).show();
@@ -65,6 +70,10 @@ public class CurrentOrderActivity extends AppCompatActivity {
         completeOrderButton.setOnClickListener(v -> completeOrder());
     }
 
+    /**
+     * Searches for an order by its number, loads the pizzas in that order,
+     * and updates the list view with the current order.
+     */
     private void searchOrder() {
         String orderNumberText = orderNumberInput.getText().toString();
         if (!orderNumberText.isEmpty()) {
@@ -77,7 +86,7 @@ public class CurrentOrderActivity extends AppCompatActivity {
                     currentOrderPizzas.addAll(pizzasInOrder);
                     updateListView();
 
-                    updateOrderSummary(); 
+                    updateOrderSummary();
                 } else {
                     Toast.makeText(this, "Order not found or already completed.", Toast.LENGTH_SHORT).show();
                 }
@@ -89,6 +98,9 @@ public class CurrentOrderActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Removes the selected pizza from the current order, confirming the action through a dialog.
+     */
     private void removeSelectedPizza() {
         if (selectedPizzaIndex >= 0 && selectedPizzaIndex < currentOrderPizzas.size()) {
             new androidx.appcompat.app.AlertDialog.Builder(this)
@@ -115,14 +127,17 @@ public class CurrentOrderActivity extends AppCompatActivity {
                             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
-                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss()) 
-                    .setCancelable(true) 
+                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                    .setCancelable(true)
                     .show();
         } else {
             Toast.makeText(this, "Please select a pizza to remove.", Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * Clears all orders from the system after confirming the action through a dialog.
+     */
     private void clearAllOrders() {
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Confirm Clear All")
@@ -140,6 +155,9 @@ public class CurrentOrderActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Completes the order, confirming the action through a dialog.
+     */
     private void completeOrder() {
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Confirm Order Completion")
@@ -172,6 +190,9 @@ public class CurrentOrderActivity extends AppCompatActivity {
                 .show();
     }
 
+    /**
+     * Updates the list view with the current pizzas in the order, displaying their details.
+     */
     private void updateListView() {
         List<String> pizzaDescriptions = new ArrayList<>();
         for (Pizza pizza : currentOrderPizzas) {
@@ -196,6 +217,9 @@ public class CurrentOrderActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Updates the order summary, including subtotal, tax, and total price.
+     */
     private void updateOrderSummary() {
         double subtotal = 0.0;
         for (Pizza pizza : currentOrderPizzas) {
