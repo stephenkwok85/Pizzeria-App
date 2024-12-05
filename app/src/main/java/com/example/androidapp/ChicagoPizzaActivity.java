@@ -27,7 +27,15 @@ import pizzeria_package.Size;
 import pizzeria_package.Topping;
 import pizzeria_package.Pizza;
 
-public class ChicagoPizzaActivity extends AppCompatActivity {
+/**
+ * ChicagoPizzaActivity handles the user interface and logic for creating and customizing a Chicago-style pizza.
+ * It allows users to select the pizza type (e.g., Deluxe, BBQ Chicken, Meatzza, Build Your Own), choose toppings, 
+ * and set the size of the pizza. The activity calculates the price based on the selected options and allows the 
+ * user to add the pizza to their current order.
+ *
+ * @author Stephen Kwok and Jeongtae Kim
+ */
+ public class ChicagoPizzaActivity extends AppCompatActivity {
     private static final double TOPPING_PRICE = 1.69;
     private static final int MAX_TOPPINGS = 7;
 
@@ -46,6 +54,9 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
     private PizzaFactory pizzaFactory;
     private ToppingAdapter toppingAdapter;
 
+    /**
+     * Initializes the activity and sets up views, listeners, and initial pizza options.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +75,9 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         setupListeners();
     }
 
+    /**
+     * Initializes all views for the activity.
+     */
     private void initializeViews() {
         chooseType = findViewById(R.id.chooseTypeSpinner);
         crustField = findViewById(R.id.crustTypeView);
@@ -79,6 +93,9 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         pizzaFactory = new ChicagoPizza();
     }
 
+    /**
+     * Sets up the RecyclerView for displaying the toppings.
+     */
     private void setupRecyclerView() {
         toppingsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         List<Topping> toppingsList = Arrays.asList(Topping.values());
@@ -86,6 +103,9 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         toppingsRecyclerView.setAdapter(toppingAdapter);
     }
 
+    /**
+     * Sets up the Spinner for selecting pizza types.
+     */
     private void setupSpinner() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
                 new String[]{"Deluxe", "BBQ Chicken", "Meatzza", "Build Your Own"});
@@ -107,11 +127,19 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets up listeners for the RadioGroup and the Add to Order button.
+     */
     private void setupListeners() {
         sizeGroup.setOnCheckedChangeListener((group, checkedId) -> updatePizzaPrice());
         addToOrderButton.setOnClickListener(view -> addOrder());
     }
 
+    /**
+     * Sets the pizza options (crust type, toppings, customization options) based on the selected pizza type.
+     *
+     * @param pizzaType The type of pizza selected (e.g., "Deluxe", "BBQ Chicken").
+     */
     private void setPizzaOptions(String pizzaType) {
         selectedToppingsCount = 0;
         toppingAdapter.resetSelection();
@@ -153,7 +181,6 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
 
                 isCustomizable = true;
                 break;
-
         }
 
         crustField.setText(crustType);
@@ -161,11 +188,9 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         updatePizzaPrice();
     }
 
-    private void onToppingSelected(int count) {
-        selectedToppingsCount = count;
-        updatePizzaPrice();
-    }
-
+    /**
+     * Updates the pizza price based on the selected size and toppings.
+     */
     private void updatePizzaPrice() {
         double price = calculateBasePrice();
         if (isCustomizable) {
@@ -174,6 +199,11 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         pizzaPrice.setText(String.format("Price: $%.2f", price));
     }
 
+    /**
+     * Calculates the base price of the pizza based on the selected size.
+     *
+     * @return The base price of the pizza.
+     */
     private double calculateBasePrice() {
         if (sSize.isChecked()) return 15.99;
         if (mSize.isChecked()) return 17.99;
@@ -181,6 +211,19 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         return 0.0;
     }
 
+    /**
+     * Handles the topping selection and updates the number of selected toppings.
+     *
+     * @param count The number of selected toppings.
+     */
+    private void onToppingSelected(int count) {
+        selectedToppingsCount = count;
+        updatePizzaPrice();
+    }
+
+    /**
+     * Adds the selected pizza to the current order.
+     */
     private void addOrder() {
         String selectedType = (String) chooseType.getSelectedItem();
         Pizza pizza;
@@ -215,6 +258,11 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         Toast.makeText(this, "Pizza added to order number: " + orderNumber, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Returns the selected pizza size based on the radio button selection.
+     *
+     * @return The selected pizza size.
+     */
     private Size getPizzaSize() {
         if (sSize.isChecked()) {
             return Size.SMALL;
@@ -223,7 +271,7 @@ public class ChicagoPizzaActivity extends AppCompatActivity {
         } else if (lSize.isChecked()) {
             return Size.LARGE;
         } else {
-            return Size.SMALL;  
+            return Size.SMALL;
         }
     }
 }
