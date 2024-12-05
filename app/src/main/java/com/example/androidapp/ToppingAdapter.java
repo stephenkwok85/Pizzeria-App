@@ -12,15 +12,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import pizzeria_package.Topping;
 
+/**
+ * Adapter to manage and display toppings in a RecyclerView. 
+ * Handles selection of toppings, ensuring that only a limited number of toppings can be selected at a time.
+ * 
+ * @author Stephen Kwok and Jeongtae Kim
+ */
 public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingViewHolder> {
+
     private final Context context;
     private List<Topping> toppings;
     private final int maxToppings;
@@ -29,6 +34,14 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
     private final Set<Topping> selectedToppings = new HashSet<>();
     private boolean isEditable = true;
 
+    /**
+     * Constructor for the ToppingAdapter.
+     *
+     * @param context       The context for the adapter.
+     * @param toppings      The list of available toppings.
+     * @param maxToppings   The maximum number of toppings that can be selected.
+     * @param listener      Listener for topping selection changes.
+     */
     public ToppingAdapter(Context context, List<Topping> toppings, int maxToppings, ToppingSelectionListener listener) {
         this.context = context;
         this.toppings = toppings;
@@ -120,6 +133,9 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
         notifyDataSetChanged();
     }
 
+    /**
+     * ViewHolder to hold the views for each topping item.
+     */
     static class ToppingViewHolder extends RecyclerView.ViewHolder {
         TextView toppingName;
         ImageView toppingImage;
