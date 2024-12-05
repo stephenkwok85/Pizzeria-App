@@ -10,10 +10,12 @@ import pizzeria_package.Pizza;
 
 /**
  * Singleton class to manage orders in the application.
- * Handles adding pizzas to orders, retrieving orders,
- * completing orders, and managing order numbers.
+ * Handles adding pizzas to orders, retrieving orders, completing orders, and managing order numbers.
+ * 
+ * @author Stephen Kwok and Jeongtae Kim
  */
 public class OrderManager {
+
     private static OrderManager instance;
     private final Map<Integer, Order> orders = new HashMap<>();
     private int nextOrderNumber = 1;
@@ -34,6 +36,13 @@ public class OrderManager {
         return instance;
     }
 
+    /**
+     * Completes an order by setting its status as placed.
+     * Resets the current order number if the order is the current active one.
+     *
+     * @param orderNumber The order number to be completed.
+     * @throws IllegalArgumentException if the order doesn't exist or is already completed.
+     */
     public void completeOrder(int orderNumber) {
         Order order = orders.get(orderNumber);
         if (order != null && !order.isPlaced()) {
@@ -55,7 +64,7 @@ public class OrderManager {
     public void addOrderToCurrentOrder(Pizza pizza) {
         if (currentOrderNumber == 0) {
             currentOrderNumber = nextOrderNumber++;
-            lastCreatedOrderNumber = currentOrderNumber; // Store the original order number
+            lastCreatedOrderNumber = currentOrderNumber;
             orders.put(currentOrderNumber, new Order());
         }
         orders.get(currentOrderNumber).addPizza(pizza);
@@ -111,6 +120,12 @@ public class OrderManager {
         return placedOrderNumbers;
     }
 
+    /**
+     * Retrieves the pizzas in a placed order by its order number.
+     *
+     * @param orderNumber The order number to retrieve.
+     * @return A list of pizzas in the placed order, or null if the order doesn't exist or is not placed.
+     */
     public List<Pizza> getPlacedOrder(int orderNumber) {
         Order order = orders.get(orderNumber);
         if (order != null && order.isPlaced()) {
@@ -145,7 +160,7 @@ public class OrderManager {
         if (lastCreatedOrderNumber != 0 && currentOrderNumber == 0) {
             nextOrderNumber = lastCreatedOrderNumber;
         } else {
-            nextOrderNumber = 1; 
+            nextOrderNumber = 1;
         }
     }
 
@@ -155,5 +170,4 @@ public class OrderManager {
     public void reuseCanceledOrderNumber(int canceledOrderNumber) {
         this.nextOrderNumber = canceledOrderNumber;
     }
-    
 }
