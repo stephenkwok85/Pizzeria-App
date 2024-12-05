@@ -31,7 +31,7 @@ public class CurrentOrderActivity extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private static final double TAX_RATE = 0.06625;
 
-    private int selectedPizzaIndex = -1; // 선택된 항목의 인덱스
+    private int selectedPizzaIndex = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,16 +49,13 @@ public class CurrentOrderActivity extends AppCompatActivity {
         clearAllOrdersButton = findViewById(R.id.clearAllOrdersButton);
         completeOrderButton = findViewById(R.id.completeOrderButton);
 
-        // Set up ListView adapter
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
         currentOrderList.setAdapter(adapter);
 
-        // Enable single-choice mode for ListView
         currentOrderList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        // Set up ListView item click listener
         currentOrderList.setOnItemClickListener((parent, view, position, id) -> {
-            selectedPizzaIndex = position; // 선택된 항목 인덱스 저장
+            selectedPizzaIndex = position;
             Toast.makeText(this, "Selected Pizza: " + (position + 1), Toast.LENGTH_SHORT).show();
         });
 
@@ -77,12 +74,11 @@ public class CurrentOrderActivity extends AppCompatActivity {
                 List<Pizza> pizzasInOrder = OrderManager.getInstance().getOrder(orderNumber);
 
                 if (pizzasInOrder != null) {
-                    // Display pizzas in ListView
                     currentOrderPizzas.clear();
                     currentOrderPizzas.addAll(pizzasInOrder);
-                    updateListView(); // Update ListView to reflect the pizzas in the order
+                    updateListView();
 
-                    updateOrderSummary(); // Update the order summary
+                    updateOrderSummary(); 
                 } else {
                     Toast.makeText(this, "Order not found or already completed.", Toast.LENGTH_SHORT).show();
                 }
@@ -96,57 +92,85 @@ public class CurrentOrderActivity extends AppCompatActivity {
 
     private void removeSelectedPizza() {
         if (selectedPizzaIndex >= 0 && selectedPizzaIndex < currentOrderPizzas.size()) {
-            Pizza selectedPizza = currentOrderPizzas.get(selectedPizzaIndex);
+            new androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle("Confirm Remove Pizza")
+                    .setMessage("Are you sure you want to remove this pizza?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        Pizza selectedPizza = currentOrderPizzas.get(selectedPizzaIndex);
 
-            try {
-                int orderNumber = Integer.parseInt(orderNumberInput.getText().toString());
-                OrderManager.getInstance().removePizzaFromOrder(orderNumber, selectedPizza);
+                        try {
+                            int orderNumber = Integer.parseInt(orderNumberInput.getText().toString());
+                            OrderManager.getInstance().removePizzaFromOrder(orderNumber, selectedPizza);
 
-                // Remove pizza from the current list
-                currentOrderPizzas.remove(selectedPizzaIndex);
+                            currentOrderPizzas.remove(selectedPizzaIndex);
 
-                // Update ListView and summary
-                updateListView();
-                updateOrderSummary();
+                            updateListView();
+                            updateOrderSummary();
 
-                // Reset the selected index
-                selectedPizzaIndex = -1;
+                            selectedPizzaIndex = -1;
 
-                Toast.makeText(this, "Selected pizza removed.", Toast.LENGTH_SHORT).show();
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "Invalid order number!", Toast.LENGTH_SHORT).show();
-            } catch (IllegalArgumentException e) {
-                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+                            Toast.makeText(this, "Selected pizza removed.", Toast.LENGTH_SHORT).show();
+                        } catch (NumberFormatException e) {
+                            Toast.makeText(this, "Invalid order number!", Toast.LENGTH_SHORT).show();
+                        } catch (IllegalArgumentException e) {
+                            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("No", (dialog, which) -> dialog.dismiss()) // Dismiss if No is clicked
+                    .setCancelable(true) 
+                    .show();
         } else {
             Toast.makeText(this, "Please select a pizza to remove.", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void clearAllOrders() {
-        currentOrderPizzas.clear();
-        updateListView();
-        updateOrderSummary();
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Confirm Clear All")
+                .setMessage("Are you sure you want to clear all orders?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    OrderManager.getInstance().clearAllOrders();
+                    currentOrderPizzas.clear();
+                    updateListView();
+                    updateOrderSummary();
+
+                    Toast.makeText(this, "All orders have been cleared.", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
+                .setCancelable(true)
+                .show();
     }
 
     private void completeOrder() {
-        try {
-            int orderNumber = Integer.parseInt(orderNumberInput.getText().toString());
-            OrderManager.getInstance().completeOrder(orderNumber);
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Confirm Order Completion")
+                .setMessage("Are you sure you want to complete this order?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    try {
+                        int orderNumber = Integer.parseInt(orderNumberInput.getText().toString());
 
-            // Clear current order list and reset UI
-            currentOrderPizzas.clear();
-            updateListView();
-            updateOrderSummary();
-            orderNumberInput.setText("");
+                        if (currentOrderPizzas.isEmpty()) {
+                            Toast.makeText(this, "Order #" + orderNumber + " has no pizzas. Cannot complete the order.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-            // Show confirmation message
-            Toast.makeText(this, "Order #" + orderNumber + " has been completed!", Toast.LENGTH_SHORT).show();
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Invalid order number!", Toast.LENGTH_SHORT).show();
-        } catch (IllegalArgumentException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+                        OrderManager.getInstance().completeOrder(orderNumber);
+
+                        currentOrderPizzas.clear();
+                        updateListView();
+                        updateOrderSummary();
+                        orderNumberInput.setText("");
+
+                        Toast.makeText(this, "Order #" + orderNumber + " has been completed!", Toast.LENGTH_SHORT).show();
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(this, "Invalid order number!", Toast.LENGTH_SHORT).show();
+                    } catch (IllegalArgumentException e) {
+                        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss()) // Dismiss if No is clicked
+                .setCancelable(true)
+                .show();
     }
 
     private void updateListView() {
