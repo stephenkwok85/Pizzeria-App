@@ -80,11 +80,17 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
         holder.toppingName.setText(topping.toString());
         holder.toppingImage.setImageResource(topping.getImageResourceId());
 
-        // Set checkbox state
-        holder.toppingCheckBox.setChecked(selectedToppings.contains(topping));
-        holder.toppingCheckBox.setEnabled(isEditable);
+        // Remove any existing listener to avoid duplicate triggers
+        holder.toppingCheckBox.setOnCheckedChangeListener(null);
 
-        // Handle checkbox interaction
+        // Set checkbox state
+        boolean isSelected = selectedToppings.contains(topping);
+        holder.toppingCheckBox.setChecked(isSelected);
+
+        // Enable or disable the checkbox based on selection rules
+        holder.toppingCheckBox.setEnabled(isEditable && (isSelected || selectedToppings.size() < maxToppings));
+
+        // Add the listener again after setting the state
         holder.toppingCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isEditable) {
                 if (isChecked) {
@@ -97,7 +103,9 @@ public class ToppingAdapter extends RecyclerView.Adapter<ToppingAdapter.ToppingV
                 } else {
                     selectedToppings.remove(topping);
                 }
+
                 listener.onToppingSelected(selectedToppings.size());
+                notifyDataSetChanged();
             } else {
                 buttonView.setChecked(true);
             }
