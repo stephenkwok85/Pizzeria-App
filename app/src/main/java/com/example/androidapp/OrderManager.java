@@ -18,6 +18,8 @@ public class OrderManager {
     private final Map<Integer, Order> orders = new HashMap<>();
     private int nextOrderNumber = 1;
     private int currentOrderNumber = 0;
+    private int lastCreatedOrderNumber = 0;
+
     private OrderManager() {}
 
     /**
@@ -53,6 +55,7 @@ public class OrderManager {
     public void addOrderToCurrentOrder(Pizza pizza) {
         if (currentOrderNumber == 0) {
             currentOrderNumber = nextOrderNumber++;
+            lastCreatedOrderNumber = currentOrderNumber; // Store the original order number
             orders.put(currentOrderNumber, new Order());
         }
         orders.get(currentOrderNumber).addPizza(pizza);
@@ -79,19 +82,6 @@ public class OrderManager {
     }
 
     /**
-     * Completes the current order by marking it as placed and resetting the current order number.
-     */
-    public void completeCurrentOrder() {
-        if (currentOrderNumber != 0) {
-            Order order = orders.get(currentOrderNumber);
-            if (order != null) {
-                order.placeOrder();
-            }
-            currentOrderNumber = 0;
-        }
-    }
-
-    /**
      * Deletes a placed order by its order number.
      *
      * @param orderNumber The order number to delete.
@@ -100,19 +90,10 @@ public class OrderManager {
     public boolean deletePlacedOrder(int orderNumber) {
         if (orders.containsKey(orderNumber) && orders.get(orderNumber).isPlaced()) {
             orders.remove(orderNumber);
+            reuseCanceledOrderNumber(orderNumber);
             return true;
         }
         return false;
-    }
-
-    /**
-     * Clears all pizzas in the current order.
-     */
-    public void clearCurrentOrder() {
-        if (currentOrderNumber != 0) {
-            orders.remove(currentOrderNumber);
-            currentOrderNumber = 0;
-        }
     }
 
     /**
@@ -147,10 +128,32 @@ public class OrderManager {
     public void removePizzaFromOrder(int orderNumber, Pizza pizza) {
         Order order = orders.get(orderNumber);
         if (order != null && !order.isPlaced()) {
-            // Remove the pizza from the order
             order.removePizza(pizza);
         } else {
             throw new IllegalArgumentException("Order not found or already completed.");
         }
     }
+
+    /**
+     * Clears all orders from the system, but ensures the order number goes back to the original number
+     * if the current order wasn't completed.
+     */
+    public void clearAllOrders() {
+        orders.clear();
+        currentOrderNumber = 0;
+
+        if (lastCreatedOrderNumber != 0 && currentOrderNumber == 0) {
+            nextOrderNumber = lastCreatedOrderNumber;
+        } else {
+            nextOrderNumber = 1; 
+        }
+    }
+
+    /**
+     * Sets the next order number to a specific value (used when canceling an order).
+     */
+    public void reuseCanceledOrderNumber(int canceledOrderNumber) {
+        this.nextOrderNumber = canceledOrderNumber;
+    }
+    
 }
